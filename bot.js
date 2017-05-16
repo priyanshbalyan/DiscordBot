@@ -1,12 +1,14 @@
-var request = require('request');
+//var request = require('request');
 
 var Discordie = require('discordie');
 
 const Events = Discordie.Events;
 const discordie = new Discordie();
 
+var prefix = "]";
+
 discordie.connect({
-	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C6cGiQ.iaHDAH9tIrNiC-LAnjBPur05GCI'
+	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
 });
 
 //connected to discord
@@ -25,36 +27,59 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
+	embed(e, e.message.content, "delete");
+});
+
+commands = ['ping', 'rng', 'flipcoin', 'help', 'profile', 'weather', 'kick', 'mute', 'ban'];
+desc = ['Check ping', 'Gives a random number', 'Flips a coin', 'Shows this message', 'Shows user profile', 'Get waether info of a place', 'Kicks a user out of the server', 'Mutes a user for a selected time', 'Bans a user'];
+//new message on server
+discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
+	//console.log(e.message.author.username);     
+	
+	if(!e.message.content.startsWith(prefix)) return;
+	
+	var cmd = e.message.content.split(' ')[0].split("");
+	cmd.shift();
+	cmd = cmd.join("");
+	try{
+	switch(cmd){
+		case commands[0] : e.message.channel.sendMessage('Pong!');
+			break;
+		case commands[1] : embed(e, "Your random number is " + Math.round(Math.random()*100), " ");
+			break;
+		case commands[2] : embed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
+			break;
+		case commands[3] : var str = "Commands available : \n";
+			for(var i=0 ; i<commands.length ; i++){
+				str += "**"+commands[i]+"**" + "\n" ;
+				str += desc[i] + "\n" ;
+			}
+			embed(e, str, " ");
+			break;
+		case commands[4] : 
+			break;
+		case commands[5] : e.message.channel.sendMessage(weather('London'));
+		break;
+	}
+	
+	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
+});
+
+function embed(e, content, event){
 	const data = {
-  		"description": e.message.content,
+  		"description": content,
   		"author": {
     	"name": e.message.author.username,
     	"url": "https://discordapp.com",
     	"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
-  		}
-  	}
-
-	e.message.channel.sendMessage(e.message.author.username+" deleted their message", false, data);
-});
-
-//new message on server
-discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
-	//console.log(e.message.author.username);     
-	var mention = '@'+e.message.author.username+'#'+e.message.author.discriminator;
-	switch(e.message.content){
-		case 'PING' : e.message.channel.sendMessage('PONG');
-			break;
-		case 'BOT' : e.message.reply('Sup '+e.message.author.username+' I\'m a bot created by my senpai Raiden. Currently I\'m in alpha stage.');
-			break;
-		case 'RIP' : e.message.channel.sendMessage('Rip indeed');
-			break;
-		case 'NSFW' : e.message.channel.sendMessage('U wanna fap boi?');
-			break;
-		case 'HELP' : e.message.channel.sendMessage('Ma current commands are ```PING BOT RIP NSFW```');
-			break;
-		case 'WEATHER' : e.message.channel.sendMessage(weather('London'));
-	}
-});
+        }
+	};
+	
+	if(event == "delete")
+		e.message.channel.sendMessage(e.message.author.username+" deleted their message", false, data);
+	else
+		e.message.channel.sendMessage(" ",false,data);
+}
 
 function weather(location){
 	var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
@@ -75,4 +100,3 @@ function weather(location){
 	});
 	return s;
 }
-
