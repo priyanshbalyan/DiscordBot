@@ -1,5 +1,4 @@
-//var request = require('request');
-
+var request = require('request');
 var Discordie = require('discordie');
 
 const Events = Discordie.Events;
@@ -8,7 +7,7 @@ const discordie = new Discordie();
 var prefix = "]";
 
 discordie.connect({
-	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
+	token: 'PASTE_TOKEN_HERE'
 });
 
 //connected to discord
@@ -30,20 +29,21 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'profile', 'weather', 'kick', 'mute', 'ban'];
-desc = ['Check ping', 'Gives a random number', 'Flips a coin', 'Shows this message', 'Shows user profile', 'Get waether info of a place', 'Kicks a user out of the server', 'Mutes a user for a selected time', 'Bans a user'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'profile', 'weather', 'kick', 'mute', 'ban'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user profile', 'Get weather info of a place', 'Kicks the mentioned user out of the server', 'Mutes the mentioned user for a selected time', 'Bans the mentioned user'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
-	
+	var start = Date.now();
 	if(!e.message.content.startsWith(prefix)) return;
 	
 	var cmd = e.message.content.split(' ')[0].split("");
+	const params = e.message.content.split(' ').slice(1);
 	cmd.shift();
 	cmd = cmd.join("");
 	try{
 	switch(cmd){
-		case commands[0] : e.message.channel.sendMessage('Pong!');
+		case commands[0] : e.message.channel.sendMessage('Pong! ``'+(Date.now()-start)+'ms``');
 			break;
 		case commands[1] : embed(e, "Your random number is " + Math.round(Math.random()*100), " ");
 			break;
@@ -54,11 +54,22 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				str += "**"+commands[i]+"**" + "\n" ;
 				str += desc[i] + "\n" ;
 			}
+			str += "Use "+prefix+" as a prefix for the commands.";
 			embed(e, str, " ");
 			break;
 		case commands[4] : 
+			if(params){
+				var member = e.message.member;
+				const roleNames = member.roles.map(role => role.name);
+				var str = "Roles:\n"+(roleNames.join("\n") || "No Roles");
+				embed(e, str, " ");
+			}else{
+
+			}
 			break;
-		case commands[5] : e.message.channel.sendMessage(weather('London'));
+		case commands [5] :
+			break;
+		case commands[6] : e.message.channel.sendMessage(weather('London'));
 		break;
 	}
 	
@@ -68,6 +79,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 function embed(e, content, event){
 	const data = {
   		"description": content,
+  		"color": 123134,
   		"author": {
     	"name": e.message.author.username,
     	"url": "https://discordapp.com",

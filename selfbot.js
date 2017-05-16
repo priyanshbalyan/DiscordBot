@@ -7,7 +7,7 @@ const discordie = new Discordie();
 var prefix = "]";
 
 discordie.connect({
-	token: 
+	token: "PASTE_TOKEN_HERE"
 });
 
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
