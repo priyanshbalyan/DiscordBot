@@ -22,15 +22,15 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
 
 //member left the server
 discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
-	e.message.channel.sendMessage('A User has left this channel.');
+	//e.message.channel.sendMessage('A User has left this channel.');
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
-	embed(e, e.message.content, "delete");
+	//embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'profile', 'weather', 'kick', 'mute', 'ban'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user profile', 'Get weather info of a place', 'Kicks the mentioned user out of the server', 'Mutes the mentioned user for a selected time', 'Bans the mentioned user'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'profile', 'quote', 'weather', 'kick', 'mute', 'ban'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user profile', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Kicks the mentioned user out of the server', 'Mutes the mentioned user for a selected time', 'Bans the mentioned user'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -62,19 +62,23 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				var member = e.message.member;
 				const roleNames = member.roles.map(role => role.name);
 				var str = "Roles:\n"+(roleNames.join("\n") || "No Roles");
-				embed(e, str, " ");
+				embed(e,str,"");
 			}else{
 
 			}
 			break;
-		case commands [5] :
+		case commands[5] :
 			break;
-		case commands[6] : e.message.channel.sendMessage(weather('London'));
+		case commands[6] : e.message.channel.sendMessage(quote());
+			break;
+		case commands[7] : e.message.channel.sendMessage(embed(e,weather(),""));
 		break;
 	}
 	
 	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
 });
+
+
 
 function embed(e, content, event){
 	const data = {
@@ -83,7 +87,7 @@ function embed(e, content, event){
   		"author": {
     	"name": e.message.author.username,
     	"url": "https://discordapp.com",
-    	"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+    	"icon_url": e.message.author.avatar
         }
 	};
 	
@@ -93,21 +97,42 @@ function embed(e, content, event){
 		e.message.channel.sendMessage(" ",false,data);
 }
 
+
+function quote(){
+	var options = {
+		url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
+		headers:{
+			"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
+		}
+	};
+	request(options, (err, res, body) => {
+		if(!err){
+		var resp = JSON.parse(body);
+		return resp.quote;
+		}
+		else
+			return "Can't fetch quotes.";
+	});
+}
+
+
 function weather(location){
 	var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
 	var key = '&APPID=25344f47dd3bf2225d2474ac80c139ca';
 	var s = '';
 	request(url+location+key , (err, res, body) => {
-    if (!err) {
-    	console.log(body);
-     	clocation = body.name +", "+ body.sys.country;
-		cweather = body.weather.description;
-		ctemp = body.main.temp -273.15;
-		chumidity = body.main.humidity;
-		s = 'Weather is '+cweather+' at '+clocation+' with temperature at '
+    	if (!err) {
+    		var resp = JSON.parse(res);
+    		console.log(body);
+     		clocation = resp.name +", "+ resp.sys.country;
+			cweather = resp.weather.description;
+			ctemp = resp.main.temp -273.15;
+			chumidity = resp.main.humidity;
+			s = 'Weather is '+cweather+' at '+clocation+' with temperature at '
 		 	+ctemp+' C '+' and '+chumidity+' humidity.';
-  	} else{
-   		console.log(err);
+  		} else{
+   			console.log(err.message);
+   			return "Can't fetch weather data.";
 		}
 	});
 	return s;
