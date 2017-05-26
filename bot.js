@@ -7,7 +7,7 @@ const discordie = new Discordie();
 var prefix = "]";
 
 discordie.connect({
-	token: 'PASTE_TOKEN_HERE'
+	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
 });
 
 //connected to discord
@@ -17,7 +17,7 @@ discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
 
 //New member joined the server
 discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
-	e.message.channel.sendMessage('Welcome!');
+	//e.message.channel.sendMessage('Welcome!');
 });
 
 //member left the server
@@ -29,8 +29,8 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'profile', 'quote', 'weather', 'kick', 'mute', 'ban'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user profile', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Kicks the mentioned user out of the server', 'Mutes the mentioned user for a selected time', 'Bans the mentioned user'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Cleans messages'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -45,10 +45,13 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	switch(cmd){
 		case commands[0] : e.message.channel.sendMessage('Pong! ``'+(Date.now()-start)+'ms``');
 			break;
+
 		case commands[1] : embed(e, "Your random number is " + Math.round(Math.random()*100), " ");
 			break;
+
 		case commands[2] : embed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
 			break;
+
 		case commands[3] : var str = "Commands available : \n";
 			for(var i=0 ; i<commands.length ; i++){
 				str += "**"+commands[i]+"**" + "\n" ;
@@ -57,22 +60,41 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			str += "Use "+prefix+" as a prefix for the commands.";
 			embed(e, str, " ");
 			break;
+		
 		case commands[4] : 
 			if(params){
 				var member = e.message.member;
 				const roleNames = member.roles.map(role => role.name);
 				var str = "Roles:\n"+(roleNames.join("\n") || "No Roles");
 				embed(e,str,"");
-			}else{
+			}
 
+			break;
+		
+		case commands[5] : 
+			if(e.message.mentions.length>0){
+				e.message.channel.sendMessage(e.message.mentions[0].avatarURL);
+			}else{
+				e.message.channel.sendMessage(e.message.author.avatarURL);
 			}
 			break;
-		case commands[5] :
+		
+		case commands[6] : quote(e);
 			break;
-		case commands[6] : e.message.channel.sendMessage(quote());
+		
+		case commands[7] : weather(e,params) ;
 			break;
-		case commands[7] : e.message.channel.sendMessage(embed(e,weather(),""));
-		break;
+		
+		case commands[8] : 
+			e.message.channel.fetchMessages()
+			.then(obj => {
+				let msgarray = obj.messages;
+				msgarray = msgarray.filter(m => m.author.id === discordie.User.id);   //ES2017 syntax
+				msgarray.length = 100 + 1;
+				msgarray.map(m => m.delete().catch(console.error));
+			});
+
+			break;
 	}
 	
 	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
@@ -98,7 +120,7 @@ function embed(e, content, event){
 }
 
 
-function quote(){
+function quote(e){
 	var options = {
 		url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
 		headers:{
@@ -108,15 +130,16 @@ function quote(){
 	request(options, (err, res, body) => {
 		if(!err){
 		var resp = JSON.parse(body);
-		return resp.quote;
+		console.log(body);
+		return e.message.channel.sendMessage(resp.quote+"\n-"+resp.author);
 		}
 		else
-			return "Can't fetch quotes.";
+			return e.message.channel.sendMessage(embed(e,"Can't fetch quotes.",""));
 	});
 }
 
 
-function weather(location){
+function weather(e, location){
 	var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
 	var key = '&APPID=25344f47dd3bf2225d2474ac80c139ca';
 	var s = '';
@@ -132,8 +155,9 @@ function weather(location){
 		 	+ctemp+' C '+' and '+chumidity+' humidity.';
   		} else{
    			console.log(err.message);
-   			return "Can't fetch weather data.";
+   			s = "Can't fetch weather data.";
 		}
+		e.message.channel.sendMessage(s);
 	});
 	return s;
 }
