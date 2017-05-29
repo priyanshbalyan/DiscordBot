@@ -29,8 +29,8 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Cleans messages'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -94,6 +94,59 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				msgarray.map(m => m.delete().catch(console.error));
 			});
 
+			break;
+
+		case commands[9] : 
+			var ball = require("./modules/8ball.js");
+			e.message.channel.sendMessage(ball.eightball());
+			break;
+
+		case commands[10] :
+			var guild = e.message.guild;
+			const data = {
+				"color": 123134,
+				"author":{
+					"name": guild.name,
+					"url": guild.iconURL,
+      				"icon_url": guild.iconURL
+				},
+				"timestamp": guild.createdAt,
+				"footer":{
+					"text": "Created"
+				},
+				"thumbnail":{
+					"url": guild.iconURL
+				},
+				"fields":[
+					{
+						"name": "Owner",
+						"value": discordie.Users.get(guild.owner_id).username+"#"+discordie.Users.get(guild.owner_id).discriminator
+					},
+					{
+						"name": "No. of Members",
+						"value": guild.member_count
+					},
+					{
+						"name": "Region",
+						"value": guild.region
+					},
+					{
+						"name": "Text Channels: "+guild.textChannels.length,
+						"value": guild.textChannels.map(m=>m.mention).join(", ")
+					},
+					{
+						"name": "Voice Channels: "+guild.voiceChannels.length,
+						"value": guild.voiceChannels.map(m=>m.name).join(", ")
+					},
+					{
+						"name": "Roles: "+guild.roles.length,
+						"value": guild.roles.map(m=>m.name).join(", ")
+					}
+
+				]
+
+			};
+			e.message.channel.sendMessage(" ",false,data);
 			break;
 	}
 	

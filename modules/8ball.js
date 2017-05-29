@@ -13,10 +13,11 @@ var ballreplies = [
 	"Without a doubt",
 	"Very doubtful",
 	"Concentrate and ask again",
-	"Yes, definitely",
-
+	"Yes, definitely"
 	];
 
 function eightball(){
 	return ballreplies[Math.round(Math.random*ballreplies.length)];
 }
+
+module.exports = eightball();
