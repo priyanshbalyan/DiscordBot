@@ -7,7 +7,7 @@ const discordie = new Discordie();
 var prefix = "]";
 
 discordie.connect({
-	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
+	token: 'PASTE_TOKEN_HERE'
 });
 
 //connected to discord
