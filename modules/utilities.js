@@ -61,11 +61,13 @@ module.exports = {
 					},
 					{
 						"name": "No. of Members",
-						"value": guild.member_count
+						"value": guild.member_count,
+						"inline":true
 					},
 					{
 						"name": "Region",
-						"value": guild.region
+						"value": guild.region,
+						"inline":true
 					},
 					{
 						"name": "Text Channels: "+guild.textChannels.length,
@@ -87,20 +89,71 @@ module.exports = {
 	},
 
 	quote:function(e){
-	var options = {
-		url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
-		headers:{
+		var options = {
+			url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
+			headers:{
 			"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
-		}
-	};
-	request(options, (err, res, body) => {
-		if(!err){
-		var resp = JSON.parse(body);
-		console.log(body);
-			return e.message.channel.sendMessage(resp.quote+"\n-"+resp.author);
-		}
-		else
-			return fembed(e,"Can't fetch quotes.","");
-	});
-}
+			}
+		};
+		request(options, (err, res, body) => {
+			if(!err){
+				var resp = JSON.parse(body);
+				console.log(body);
+				return e.message.channel.sendMessage(resp.quote+"\n-"+resp.author);
+			}
+			else
+				return fembed(e,"Can't fetch quotes.","");
+		});
+	},
+
+	weather:function(e, location){
+		var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
+		var key = '&APPID=25344f47dd3bf2225d2474ac80c139ca';
+
+		request(url+location+key , (err, res, body) => {
+	    	if (!err) {
+    			var resp = JSON.parse(body);
+    			//console.log(body);
+			 	var embed = {
+		 			"color": 123134,
+		 			"author": {
+			 			"name":"Weather at "+resp.name+", "+resp.sys.country
+		 			},
+		 			"thumbnail":{
+		 				"url": "http://openweathermap.org/img/w/"+resp.weather[0].icon+".png"
+		 			},
+		 			"fields": [
+			 			{
+		 					"name": resp.weather[0].main,
+			 				"value": resp.weather[0].description
+		 				},
+			 			{
+			 				"name": "Current Temperature",
+		 					"value": (resp.main.temp-273.15).toFixed(2)+"°C",
+		 					"inline":true
+		 				},
+		 				{
+			 				"name": "Max/Min Temperature",
+		 					"value": (resp.main.temp_max-273.15).toFixed(2)+"°C / "+(resp.main.temp_min-273.15).toFixed(2)+"°C",
+		 					"inline":true
+		 				},
+		 				{
+			 				"name": "Humidity",
+			 				"value": resp.main.humidity+"%",
+		 					"inline":true
+		 				},
+		 			]
+		 		};
+  			} else{
+	   			var embed = {
+   					"description": "Can't fetch weather data."
+   				};
+			}
+			
+			e.message.channel.sendMessage(" ", false, embed);
+		});
+	}
+
+
+
 };
