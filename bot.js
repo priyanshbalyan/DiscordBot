@@ -11,7 +11,7 @@ var prefix = "]";
 
 
 discordie.connect({
-	token: 'PASTE_TOKEN_HERE'
+	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
 });
 
 //connected to discord
@@ -34,7 +34,7 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 });
 
 commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ```weather <Location>```', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -99,7 +99,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 		case commands[6] : Utilities.quote(e);
 			break;
 		
-		case commands[7] : weather(e,params) ;
+		case commands[7] : Utilities.weather(e, params) ;
 			break;
 		
 		case commands[8] : 
@@ -158,12 +158,13 @@ function weather(e, location){
     	if (!err) {
     		var resp = JSON.parse(res);
     		console.log(body);
-     		clocation = resp.name +", "+ resp.sys.country;
+     		/*clocation = resp.name +", "+ resp.sys.country;
 			cweather = resp.weather.description;
 			ctemp = resp.main.temp -273.15;
 			chumidity = resp.main.humidity;
 			s = 'Weather is '+cweather+' at '+clocation+' with temperature at '
-		 	+ctemp+' C '+' and '+chumidity+' humidity.';
+		 	+ctemp+' C '+' and '+chumidity+' humidity.';*/
+		 	s = location;
   		} else{
    			console.log(err.message);
    			s = "Can't fetch weather data.";
