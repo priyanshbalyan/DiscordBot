@@ -1,13 +1,17 @@
 var request = require('request');
 var Discordie = require('discordie');
 
+
+var Utilities = require("./modules/utilities.js");
+
 const Events = Discordie.Events;
 const discordie = new Discordie();
 
 var prefix = "]";
 
+
 discordie.connect({
-	token: 'PASTE_TOKEN_HERE'
+	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
 });
 
 //connected to discord
@@ -46,10 +50,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 		case commands[0] : e.message.channel.sendMessage('Pong! ``'+(Date.now()-start)+'ms``');
 			break;
 
-		case commands[1] : embed(e, "Your random number is " + Math.round(Math.random()*100), " ");
+		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100), " ");
 			break;
 
-		case commands[2] : embed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
+		case commands[2] : fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
 			break;
 
 		case commands[3] : var str = "Commands available : \n";
@@ -58,28 +62,41 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				str += desc[i] + "\n" ;
 			}
 			str += "Use "+prefix+" as a prefix for the commands.";
-			embed(e, str, " ");
+			fembed(e, str, " ");
 			break;
 		
 		case commands[4] : 
-			if(params){
-				var member = e.message.member;
-				const roleNames = member.roles.map(role => role.name);
-				var str = "Roles:\n"+(roleNames.join("\n") || "No Roles");
-				embed(e,str,"");
-			}
+			if(e.message.mentions.length>0) var guildmember = discordie.Users.getMember(e.message.guild,e.message.mentions[0]);
+			else var guildmember = e.message.member;
+			var roleNames = guildmember.roles.map(role => role.name);
+			var str = (roleNames.join("\n") || "No Roles");
+			var embed = {
+				"color":123134,
+				"author":{
+					"name": guildmember.name+"'s Roles",
+				},
+				"description":str
+			};
+			e.message.channel.sendMessage(" ", false, embed);
 
 			break;
 		
 		case commands[5] : 
-			if(e.message.mentions.length>0){
-				e.message.channel.sendMessage(e.message.mentions[0].avatarURL);
-			}else{
-				e.message.channel.sendMessage(e.message.author.avatarURL);
-			}
+			if(e.message.mentions.length>0) var user = e.message.mentions[0];
+			else var user = e.message.author;
+			var embed = {
+				"color":123134,
+				"author":{
+					"name": e.message.author.username+" #"+e.message.author.discriminator,
+				},
+				"image":{
+					"url":user.avatarURL
+				}
+			};
+			e.message.channel.sendMessage(" ",false,embed);
 			break;
 		
-		case commands[6] : quote(e);
+		case commands[6] : Utilities.quote(e);
 			break;
 		
 		case commands[7] : weather(e,params) ;
@@ -97,56 +114,15 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case commands[9] : 
-			var ball = require("./modules/8ball.js");
-			e.message.channel.sendMessage(ball.eightball());
+			if(params != "")
+				fembed(e, Utilities.eightball()+", "+e.message.author.username, "");
+			else
+				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
 			break;
 
 		case commands[10] :
 			var guild = e.message.guild;
-			const data = {
-				"color": 123134,
-				"author":{
-					"name": guild.name,
-					"url": guild.iconURL,
-      				"icon_url": guild.iconURL
-				},
-				"timestamp": guild.createdAt,
-				"footer":{
-					"text": "Created"
-				},
-				"thumbnail":{
-					"url": guild.iconURL
-				},
-				"fields":[
-					{
-						"name": "Owner",
-						"value": discordie.Users.get(guild.owner_id).username+"#"+discordie.Users.get(guild.owner_id).discriminator
-					},
-					{
-						"name": "No. of Members",
-						"value": guild.member_count
-					},
-					{
-						"name": "Region",
-						"value": guild.region
-					},
-					{
-						"name": "Text Channels: "+guild.textChannels.length,
-						"value": guild.textChannels.map(m=>m.mention).join(", ")
-					},
-					{
-						"name": "Voice Channels: "+guild.voiceChannels.length,
-						"value": guild.voiceChannels.map(m=>m.name).join(", ")
-					},
-					{
-						"name": "Roles: "+guild.roles.length,
-						"value": guild.roles.map(m=>m.name).join(", ")
-					}
-
-				]
-
-			};
-			e.message.channel.sendMessage(" ",false,data);
+			e.message.channel.sendMessage(" ",false,Utilities.guildinfo(guild,discordie));
 			break;
 	}
 	
@@ -155,14 +131,14 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 
 
-function embed(e, content, event){
+function fembed(e, content, event){
 	const data = {
   		"description": content,
   		"color": 123134,
   		"author": {
     	"name": e.message.author.username,
     	"url": "https://discordapp.com",
-    	"icon_url": e.message.author.avatar
+    	"icon_url": e.message.author.avatarURL
         }
 	};
 	
@@ -172,24 +148,6 @@ function embed(e, content, event){
 		e.message.channel.sendMessage(" ",false,data);
 }
 
-
-function quote(e){
-	var options = {
-		url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
-		headers:{
-			"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
-		}
-	};
-	request(options, (err, res, body) => {
-		if(!err){
-		var resp = JSON.parse(body);
-		console.log(body);
-		return e.message.channel.sendMessage(resp.quote+"\n-"+resp.author);
-		}
-		else
-			return e.message.channel.sendMessage(embed(e,"Can't fetch quotes.",""));
-	});
-}
 
 
 function weather(e, location){
