@@ -11,12 +11,14 @@ var prefix = "]";
 
 
 discordie.connect({
-	token: 'Mjg5Nzc2MDA1NTA0MDQwOTYw.C_s5mQ.nG89AeHb9eSiVU0gMwF4Op7oFC0'
+	token: 'PASTE_TOKEN_HERE'
 });
 
 //connected to discord
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
 	console.log("connected as " + discordie.User.username);
+	var game = {name: prefix+"help"};
+	discordie.User.setGame(game);
 });
 
 //New member joined the server
@@ -33,8 +35,8 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -123,6 +125,30 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 		case commands[10] :
 			var guild = e.message.guild;
 			e.message.channel.sendMessage(" ",false,Utilities.guildinfo(guild,discordie));
+			break;
+
+		case commands[11] :
+			if(e.message.mentions.length>0) var user = e.message.mentions[0];
+			else var user = e.message.author;
+			
+			e.message.channel.sendMessage(" ", false, Utilities.userinfo(e, user));
+			break;
+
+		case commands[12] :
+			let regex = /(<:([^>]+):(\d+)>)/ig;
+			match = regex.exec(e.message.content);
+			var emojiurl = e.message.guild.getEmojiURL(match[3]);
+			e.message.channel.sendMessage("Emoji Name: "+match[2]+"\n"+emojiurl);
+			break;
+
+		case commands[13] :
+			if(e.message.mentions.length>=2){
+			var fname = e.message.mentions[0].username;
+			var sname = e.message.mentions[1].username;
+
+			Utilities.lovecalc(e, fname,sname);
+			}else
+				e.message.channel.sendMessage("The Correct usage is\n``"+prefix+"lovecalc <mention1> <mention2>``");
 			break;
 	}
 	
