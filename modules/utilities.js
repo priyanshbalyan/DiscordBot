@@ -87,22 +87,83 @@ module.exports = {
 			};
 			return embed;
 	},
+	
+	userinfo:function(e, user){
+		var embed = {
+				"color":123134,
+				"author":{
+					"name":user.username+"#"+user.discriminator,
+					"icon_url":user.avatarURL
+				},
+				"timestamp": user.registeredAt,
+				"footer":{
+					"text": "Created"
+				},
+				"thumbnail":{
+					"url":user.avatarURL
+				},
+				"fields":[
+					{
+						"name":"ID",
+						"value":user.id,
+						"inline":true
+					},
+					{
+						"name":"Nickname",
+						"value":(user.memberOf(e.message.guild).nick)||"No Nickname",
+						"inline":true
+					},
+					{
+						"name":"Playing",
+						"value":(user.gameName)||"n/a",
+						"inline":true
+					},
+					{
+						"name":"Status",
+						"value":user.status,
+						"inline":true
+					},
+					{
+						"name":"Joined",
+						"value":user.memberOf(e.message.guild).joined_at,
+						"inline":true
+					},
+					{
+						"name":"Roles",
+						"value":(user.memberOf(e.message.guild).roles.map(m=>m.role).join(", "))||"No Roles",
+						"inline":true
+					}
+				]
+			};
+		return embed;
+	},
 
 	quote:function(e){
 		var options = {
 			url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
 			headers:{
-			"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
+				"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
 			}
 		};
 		request(options, (err, res, body) => {
 			if(!err){
 				var resp = JSON.parse(body);
 				console.log(body);
-				return e.message.channel.sendMessage(resp.quote+"\n-"+resp.author);
+				var embed = {
+					"color": 123134,
+					"author":{
+						"name": resp.quote,
+					},
+					"footer":{
+						"text": resp.author+" | "+resp.category
+					}
+				};
 			}
 			else
-				return fembed(e,"Can't fetch quotes.","");
+				var embed = {
+					"description": "Can't fetch quotes."
+				}
+			e.message.channel.sendMessage(" ",false,embed);
 		});
 	},
 
@@ -152,8 +213,34 @@ module.exports = {
 			
 			e.message.channel.sendMessage(" ", false, embed);
 		});
+	},
+
+	lovecalc:function(e,fname,sname){
+		var options = {
+			url:"https://love-calculator.p.mashape.com/getPercentage?fname="+fname+"&sname="+sname,
+			headers:{
+				"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
+			}
+		};
+		request(options, (err,res,body)=>{
+			if(!err){
+				var resp = JSON.parse(body);
+				//console.log(resp);
+				s = ""; i=resp.percentage; while(i>0){s+=":two_hearts:";i-=20;}
+				var embed = {
+					"color":123134,
+					"author":{
+						"name": "Love between "+resp.fname+" and "+resp.sname+" is "+resp.percentage+"%"
+					},
+					"description":":revolving_hearts:  "+resp.result+"\n"+s
+				};
+			}else{
+				var embed = {
+					"description": "Can't fetch love data."
+				};
+			}
+			e.message.channel.sendMessage(" ", false, embed);
+		});
 	}
-
-
 
 };
