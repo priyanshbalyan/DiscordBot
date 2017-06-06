@@ -9,9 +9,9 @@ const discordie = new Discordie();
 
 var prefix = "]";
 
-
+var Key = require('./key.js');
 discordie.connect({
-	token: 'PASTE_TOKEN_HERE'
+	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
 //connected to discord
@@ -35,8 +35,8 @@ discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -47,6 +47,8 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	const params = e.message.content.split(' ').slice(1);
 	cmd.shift();
 	cmd = cmd.join("");
+
+	console.log(params);
 	try{
 	switch(cmd){
 		case commands[0] : e.message.channel.sendMessage('Pong! ``'+(Date.now()-start)+'ms``');
@@ -143,12 +145,28 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case commands[13] :
 			if(e.message.mentions.length>=2){
-			var fname = e.message.mentions[0].username;
-			var sname = e.message.mentions[1].username;
-
-			Utilities.lovecalc(e, fname,sname);
+				var fname = e.message.mentions[0].username;
+				var sname = e.message.mentions[1].username;
+				Utilities.lovecalc(e, fname,sname);
 			}else
 				e.message.channel.sendMessage("The Correct usage is\n``"+prefix+"lovecalc <mention1> <mention2>``");
+			break;
+
+		case commands[14]:
+			if(e.message.mentions.length>0)
+				if(e.message.author.can(Discordie.Permissions.General.KICK_MEMBERS, e.message.guild))
+					e.message.mentions[0].memberOf(e.message.guild).kick().then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been kicked!***"))
+					.catch(err=>e.message.channel.sendMessage("Can't kick member.\n"+err.message));
+				else
+					console.log("user doesn't have the perms to kick");
+			break;
+
+		case commands[15]:
+			if(e.message.mentions.length>0)
+				if(e.message.author.can(Discordie.Permissions.General.BAN_MEMBERS, e.message.guild))
+					e.message.guild.ban(e.message.mentions[0], 1).then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been banned!***")).catch(err=>e.message.channel.sendMessage("Can't ban member.\n"+err.message));
+				else
+					console.log("user doesn't have the perm to ban");
 			break;
 	}
 	
@@ -172,30 +190,4 @@ function fembed(e, content, event){
 		e.message.channel.sendMessage(e.message.author.username+" deleted their message", false, data);
 	else
 		e.message.channel.sendMessage(" ",false,data);
-}
-
-
-
-function weather(e, location){
-	var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
-	var key = '&APPID=25344f47dd3bf2225d2474ac80c139ca';
-	var s = '';
-	request(url+location+key , (err, res, body) => {
-    	if (!err) {
-    		var resp = JSON.parse(res);
-    		console.log(body);
-     		/*clocation = resp.name +", "+ resp.sys.country;
-			cweather = resp.weather.description;
-			ctemp = resp.main.temp -273.15;
-			chumidity = resp.main.humidity;
-			s = 'Weather is '+cweather+' at '+clocation+' with temperature at '
-		 	+ctemp+' C '+' and '+chumidity+' humidity.';*/
-		 	s = location;
-  		} else{
-   			console.log(err.message);
-   			s = "Can't fetch weather data.";
-		}
-		e.message.channel.sendMessage(s);
-	});
-	return s;
 }
