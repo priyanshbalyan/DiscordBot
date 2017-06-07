@@ -90,51 +90,52 @@ module.exports = {
 	
 	userinfo:function(e, user){
 		var embed = {
-				"color":123134,
-				"author":{
-					"name":user.username+"#"+user.discriminator,
-					"icon_url":user.avatarURL
+			"color":123134,
+			"author":{
+				"name":user.username+"#"+user.discriminator,
+				"icon_url":user.avatarURL
+			},
+			"timestamp": user.registeredAt,
+			"footer":{
+				"text": "Created"
+			},
+			"thumbnail":{
+				"url": user.avatarURL
+			},
+			"fields":[
+				{
+					"name":"ID",
+					"value":user.id,
+					"inline":true
 				},
-				"timestamp": user.registeredAt,
-				"footer":{
-					"text": "Created"
+				{
+					"name":"Nickname",
+					"value":(user.memberOf(e.message.guild).nick)||"No nickname on this server",
+					"inline":true
 				},
-				"thumbnail":{
-					"url":user.avatarURL
+				{
+					"name":"Playing",
+					"value":(user.gameName)||"n/a",
+					"inline":true
 				},
-				"fields":[
-					{
-						"name":"ID",
-						"value":user.id,
-						"inline":true
-					},
-					{
-						"name":"Nickname",
-						"value":(user.memberOf(e.message.guild).nick)||"No Nickname",
-						"inline":true
-					},
-					{
-						"name":"Playing",
-						"value":(user.gameName)||"n/a",
-						"inline":true
-					},
-					{
-						"name":"Status",
-						"value":user.status,
-						"inline":true
-					},
-					{
-						"name":"Joined",
-						"value":user.memberOf(e.message.guild).joined_at,
-						"inline":true
-					},
-					{
-						"name":"Roles",
-						"value":(user.memberOf(e.message.guild).roles.map(m=>m.role).join(", "))||"No Roles",
-						"inline":true
-					}
-				]
-			};
+				{
+					"name":"Status",
+					"value":user.status,
+					"inline":true
+				},
+				{
+					"name":"Joined",
+					"value":user.memberOf(e.message.guild).joined_at,
+					"inline":true
+				},
+				{
+					"name":"Roles",
+					"value":(user.memberOf(e.message.guild).roles.map(role=>role.name).join(", "))||"No Roles",
+					"inline":true
+				}
+			]
+		};
+
 		return embed;
 	},
 
@@ -175,6 +176,9 @@ module.exports = {
 	    	if (!err) {
     			var resp = JSON.parse(body);
     			//console.log(body);
+    			if(resp.hasOwnProperty("cod"))
+    				if(resp.cod == "404")
+    					return {"description":resp.message}
 			 	var embed = {
 		 			"color": 123134,
 		 			"author": {
