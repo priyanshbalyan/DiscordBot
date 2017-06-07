@@ -51,7 +51,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	console.log(params);
 	try{
 	switch(cmd){
-		case commands[0] : e.message.channel.sendMessage('Pong! ``'+(Date.now()-start)+'ms``');
+		case commands[0] : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+Date.now()-start+'ms``'));
 			break;
 
 		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100), " ");
