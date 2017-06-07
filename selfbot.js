@@ -1,188 +1,96 @@
-var Discordie = require('discordie');
 var request = require('request');
+var Discordie = require('discordie');
 
-var Utilities = require('./modules/Utilities.js')
+
+var Utilities = require("./modules/utilities.js");
+
 const Events = Discordie.Events;
-
 const discordie = new Discordie();
 
 var prefix = "]";
 
-var Key = require('./key.js'); //Needed for getting token from a file
+var Key = require('./key.js');
 discordie.connect({
-	token: Key.getToken() //paste your own token here instead of Key.getToken()
+	token: Key.getToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
+//connected to discord
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
-	console.log("Selfbot connected.");
+	console.log("connected as " + discordie.User.username);
+	var game = {name: prefix+"help"};
+	discordie.User.setGame(game);
 });
 
-discordie.Dispatcher.on(Events.MESSAGE_CREATE, e => {
-	console.log(e.message.content);
+//New member joined the server
+discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
+	//e.message.channel.sendMessage('Welcome!');
+});
+
+//member left the server
+discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
+	//e.message.channel.sendMessage('A User has left this channel.');
+});
+
+discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
+	//embed(e, e.message.content, "delete");
+});
+
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user'];
+//new message on server
+discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
+
 	if(!e.message.content.startsWith(prefix)) return;
-	if(e.message.author !== discordie.User) {console.log("fire2");return;}
-	else console.log("reject");
+	if(e.message.author.id !== discordie.User.id) {console.log("fire2");return;}     
+	console.log(e.message.author.username);
+	var start = Date.now();
+	if(!e.message.content.startsWith(prefix)) return;
 	
-	console.log("test");
+	e.message.delete().catch(console.error);
+
 	var cmd = e.message.content.split(' ')[0].split("");
 	const params = e.message.content.split(' ').slice(1);
 	cmd.shift();
 	cmd = cmd.join("");
-	
-//	var msgrepeat;
-//	var randwait;
+
+	console.log(params);
 	try{
-		switch(cmd){
-			case "ping": e.message.channel.sendMessage("Pong");
-			break;
-			/*case "startfishing" :
-				msgrepeat = setInterval(()=>{
-					randwait = setTimeout(()=>{
-					e.message.channel.sendMessage("t!fish");
-					},Math.random()*10000);
-
-				},30000);
-				break;;
-				
-			case "stopfishing" :
-				clearInterval(msgrepeat);
-				clearTimeout(randwait);
-				break;
-*/
-			case "clean" : 
-			e.message.channel.fetchMessages()
-			.then(obj => {
-				let msgarray = obj.messages;
-				msgarray = msgarray.filter(m => m.author.id === discordie.User.id);   //ES2017 syntax
-				msgarray.length = 10 + 1;
-				msgarray.map(m => m.delete().catch(console.error));
-			});
-
+	switch(cmd){
+		case commands[0] : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+Date.now()-start+'ms``'));
 			break;
 
-			case "serverinfo" :
-			var guild = e.message.guild;
-			var data = {
-				"color": 123134,
-				"author":{
-					"name": guild.name,
-					"url": guild.iconURL,
-      				"icon_url": guild.iconURL
-				},
-				"timestamp": guild.createdAt,
-				"footer":{
-					"text": "Created"
-				},
-				"thumbnail":{
-					"url": guild.iconURL
-				},
-				"fields":[
-					{
-						"name": "Owner",
-						"value": discordie.Users.get(guild.owner_id).username+"#"+discordie.Users.get(guild.owner_id).discriminator
-					},
-					{
-						"name": "No. of Members",
-						"value": guild.member_count
-					},
-					{
-						"name": "Region",
-						"value": guild.region
-					},
-					{
-						"name": "Text Channels: "+guild.textChannels.length,
-						"value": guild.textChannels.map(m=>m.mention).join(", ")
-					},
-					{
-						"name": "Voice Channels: "+guild.voiceChannels.length,
-						"value": guild.voiceChannels.map(m=>m.name).join(", ")
-					},
-					{
-						"name": "Roles: "+guild.roles.length,
-						"value": guild.roles.map(m=>m.name).join(", ")
-					}
-
-				]
-
-			};
-			e.message.channel.sendMessage(" ",false,data);
+		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100), " ");
 			break;
 
-			case "userinfo" :
-			if(e.message.mentions.length>0) var user = e.message.mentions[0];
-			else var user = e.message.author;
+		case commands[2] : fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
+			break;
+
+		case commands[3] : var str = "Commands available : \n";
+			for(var i=0 ; i<commands.length ; i++){
+				str += "**"+commands[i]+"**" + "\n" ;
+				str += desc[i] + "\n" ;
+			}
+			str += "Use "+prefix+" as a prefix for the commands.";
+			fembed(e, str, " ");
+			break;
+		
+		case commands[4] : 
+			if(e.message.mentions.length>0) var guildmember = discordie.Users.getMember(e.message.guild,e.message.mentions[0]);
+			else var guildmember = e.message.member;
+			var roleNames = guildmember.roles.map(role => role.name);
+			var str = (roleNames.join("\n") || "No Roles");
 			var embed = {
 				"color":123134,
 				"author":{
-					"name":user.username+"#"+user.discriminator,
-					"icon_url":user.avatarURL
+					"name": guildmember.name+"'s Roles",
 				},
-				"timestamp": user.registeredAt,
-				"footer":{
-					"text": "Created"
-				},
-				"thumbnail":{
-					"url":user.avatarURL
-				},
-				"fields":[
-					{
-						"name":"ID",
-						"value":user.id,
-						"inline":true
-					},
-					{
-						"name":"Nickname",
-						"value":(user.memberOf(e.message.guild).nick)||"No Nickname",
-						"inline":true
-					},
-					{
-						"name":"Playing",
-						"value":(user.gameName)||"n/a",
-						"inline":true
-					},
-					{
-						"name":"Status",
-						"value":user.status,
-						"inline":true
-					},
-					{
-						"name":"Joined",
-						"value":user.memberOf(e.message.guild).joined_at,
-						"inline":true
-					},
-					{
-						"name":"Roles",
-						"value":(user.memberOf(e.message.guild).roles.map(m=>m.role).join(", "))||"No Roles",
-						"inline":true
-					}
-				]
+				"description":str
 			};
-			e.message.channel.sendMessage(" ",false,embed);
-			break;
+			e.message.channel.sendMessage(" ", false, embed);
 
-			case "quote" : Utilities.quote(e);
 			break;
-
-			case "weather" : Utilities.weather(e,params);
-			break;
-
-			case "8ball" :
-			if(params != "")
-				fembed(e, Utilities.eightball()+", "+e.message.author.username, "");
-			else
-				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
-			break;
-
-			case "lovecalc" :
-			if(e.message.mentions.length>=2){
-				var fname = e.message.mentions[0].username;
-				var sname = e.message.mentions[1].username;
-				Utilities.lovecalc(e, fname,sname);
-			}else
-				e.message.channel.sendMessage("The Correct usage is\n``"+prefix+"lovecalc <mention1> <mention2>``");
-			break;
-
-			case "avatar" :
+		
+		case commands[5] : 
 			if(e.message.mentions.length>0) var user = e.message.mentions[0];
 			else var user = e.message.author;
 			var embed = {
@@ -196,8 +104,95 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e => {
 			};
 			e.message.channel.sendMessage(" ",false,embed);
 			break;
+		
+		case commands[6] : Utilities.quote(e);
+			break;
+		
+		case commands[7] : Utilities.weather(e, params) ;
+			break;
+		
+		case commands[8] : 
+			e.message.channel.fetchMessages()
+			.then(obj => {
+				let msgarray = obj.messages;
+				msgarray = msgarray.filter(m => m.author.id === discordie.User.id);   //ES2017 syntax
+				msgarray.length = 100 + 1;
+				msgarray.map(m => m.delete().catch(console.error));
+			});
 
-		}
-	}catch(err){e.message.channel.sendMessage(err.message);}
+			break;
+
+		case commands[9] : 
+			if(params != "")
+				fembed(e, Utilities.eightball()+", "+e.message.author.username, "");
+			else
+				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
+			break;
+
+		case commands[10] :
+			var guild = e.message.guild;
+			e.message.channel.sendMessage(" ",false,Utilities.guildinfo(guild,discordie));
+			break;
+
+		case commands[11] :
+			if(e.message.mentions.length>0) var user = e.message.mentions[0];
+			else var user = e.message.author;
+			
+			e.message.channel.sendMessage(" ", false, Utilities.userinfo(e, user));
+			break;
+
+		case commands[12] :
+			let regex = /(<:([^>]+):(\d+)>)/ig;
+			match = regex.exec(e.message.content);
+			var emojiurl = e.message.guild.getEmojiURL(match[3]);
+			e.message.channel.sendMessage("Emoji Name: "+match[2]+"\n"+emojiurl);
+			break;
+
+		case commands[13] :
+			if(e.message.mentions.length>=2){
+				var fname = e.message.mentions[0].username;
+				var sname = e.message.mentions[1].username;
+				Utilities.lovecalc(e, fname,sname);
+			}else
+				e.message.channel.sendMessage("The Correct usage is\n``"+prefix+"lovecalc <mention1> <mention2>``");
+			break;
+
+		case commands[14]:
+			if(e.message.mentions.length>0)
+				if(e.message.author.can(Discordie.Permissions.General.KICK_MEMBERS, e.message.guild))
+					e.message.mentions[0].memberOf(e.message.guild).kick().then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been kicked!***"))
+					.catch(err=>e.message.channel.sendMessage("Can't kick member.\n"+err.message));
+				else
+					console.log("user doesn't have the perms to kick");
+			break;
+
+		case commands[15]:
+			if(e.message.mentions.length>0)
+				if(e.message.author.can(Discordie.Permissions.General.BAN_MEMBERS, e.message.guild))
+					e.message.guild.ban(e.message.mentions[0], 1).then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been banned!***")).catch(err=>e.message.channel.sendMessage("Can't ban member.\n"+err.message));
+				else
+					console.log("user doesn't have the perm to ban");
+			break;
+	}
 	
+	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
 });
+
+
+
+function fembed(e, content, event){
+	const data = {
+  		"description": content,
+  		"color": 123134,
+  		"author": {
+    	"name": e.message.author.username,
+    	"url": "https://discordapp.com",
+    	"icon_url": e.message.author.avatarURL
+        }
+	};
+	
+	if(event == "delete")
+		e.message.channel.sendMessage(e.message.author.username+" deleted their message", false, data);
+	else
+		e.message.channel.sendMessage(" ",false,data);
+}
