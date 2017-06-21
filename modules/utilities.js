@@ -245,6 +245,42 @@ module.exports = {
 			}
 			e.message.channel.sendMessage(" ", false, embed);
 		});
+	},
+
+	urban:function(e, term){
+		var options = {
+			url:"https://mashape-community-urban-dictionary.p.mashape.com/define?term="+term,
+			headers:{
+				"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
+			}
+		};
+		request(options, (err,res,body) => {
+			if(!err){
+				var resp = JSON.parse(body);
+				var embed = {
+					"color":123134,
+					"author":{
+						"name": "Defintion for "+term+" by "+resp.list[0].author
+					},
+					"description":resp.list[0].definition,
+					"thumbnail":{
+						"url":"http/error.urbandictionary.com/logo.png?width=89&height=29"
+					},
+					"fields":[{
+						"name":"Example",
+						"value":resp.list[0].example
+					}],
+					"footer":{
+						"text":resp.list[0].thumbs_up+" :thumbsup: | :thumbsdown: "+resp.list[0].thumbs_down
+					}
+				};
+			}else{
+				var embed = {
+					"description": "Can't fetch data from urban dictionary"
+				}
+			}
+			e.message.channel.sendMessage(" ", false, embed);
+		});
 	}
 
 };
