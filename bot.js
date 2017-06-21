@@ -62,8 +62,8 @@ discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {
 			settings[e.message.guild.id].starboardch.sendMessage("Emoji: "+e.emoji.name+"\nMessage: "+e.message.content+"\nUser: "+e.user.uername);
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user', 'Make the bot say something', 'Set various channels for specific features of the bot. Call this '];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user', 'Make the bot say something', 'Set various channels for specific features of the bot.', 'Get definition of the word from urban dictionary'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -121,7 +121,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 					"name": e.message.author.username+" #"+e.message.author.discriminator,
 				},
 				"image":{
-					"url":user.avatarURL
+					"url":user.avatarURL+"?size=1024"
 				}
 			};
 			e.message.channel.sendMessage(" ",false,embed);
@@ -192,7 +192,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case commands[17]://set
-			if(!settings.hasOwnProperty(e.message.guild.id)) settings[e.message.guild.id] = { welcomech:null, starboardch:null, deletech:null};
+			if(!settings.hasOwnProperty(e.message.guild.id)) settings[e.message.guild.id] = { welcomech:null, starboardch:null, deletech:null };
 			if(e.message.author.can(Discordie.Permissions.General.MANAGE_CHANNELS, e.message.guild))
 				switch(params[0]){
 					case "deletelog": settings[e.message.guild.id].deletech = e.message.channel;
@@ -218,6 +218,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 				}
 
+			break;
+
+		case commands[18]:
+			Utilities.urban(e, params);
 			break;
 	}
 	
