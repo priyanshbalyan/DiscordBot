@@ -51,19 +51,22 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
+	if(e.message != null)
 	if(settings.hasOwnProperty(e.message.guild.id))
 		if(settings[e.message.guild.id].deletech)
-			settings[e.message.guild.id].deletech.sendMessage(e.message.timestamp, false, fembed(e, "delete"));
+			settings[e.message.guild.id].deletech.sendMessage(" ", false, fembed(e, "delete"));
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {
+	if(e.message != null)
 	if(settings.hasOwnProperty(e.message.guild.id))
 		if(settings[e.message.guild.id].starboardch)
-			settings[e.message.guild.id].starboardch.sendMessage("Emoji: "+e.emoji.name+"\nMessage: "+e.message.content+"\nUser: "+e.user.uername);
+
+			//e.message.channel.sendMessage("usr: "+e.user.username+" channel: "+e.channel.name+" emoji:"+JSON.stringify(e.emoji));
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user', 'Make the bot say something', 'Set various channels for specific features of the bot.', 'Get definition of the word from urban dictionary'];
+commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban', 'mute', 'unmute'];
+desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user', 'Make the bot say something', 'Set various channels for specific features of the bot.', 'Get definition of the word from urban dictionary', 'Mute a user for a specified time', 'Unmutes the muted user'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -81,10 +84,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 		case commands[0] : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
 			break;
 
-		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100), " ");
+		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100));
 			break;
 
-		case commands[2] : fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"), " ");
+		case commands[2] : fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"));
 			break;
 
 		case commands[3] : var str = "Commands available : \n";
@@ -93,7 +96,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				str += desc[i] + "\n" ;
 			}
 			str += "Use "+prefix+" as a prefix for the commands.";
-			fembed(e, str, " ");
+			fembed(e, str);
 			break;
 		
 		case commands[4] : 
@@ -146,7 +149,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case commands[9] : 
 			if(params != "")
-				fembed(e, Utilities.eightball()+", "+e.message.author.username, "");
+				fembed(e, Utilities.eightball()+", "+e.message.author.username);
 			else
 				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
 			break;
@@ -217,11 +220,24 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 						break;
 
 				}
+			else console.log("user doesnt have perms");
 
 			break;
 
 		case commands[18]:
 			Utilities.urban(e, params);
+			break;
+
+		case commands[19]:
+			Moderation.mute(e, params);
+			break;
+
+		case commands[20]:
+			Moderation.unmute(e, params);
+			break;
+
+		case "eval":
+			if(e.message.author.id == "279207740340043776")
 			break;
 	}
 	
@@ -229,19 +245,23 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 });
 
 
-function fembed(e, event){
+function fembed(e, str){
 	const data = {
   		"description": e.message.content,
   		"color": 123134,
   		"author": {
-    	"name": e.message.author.username,
-    	"url": e.message.author.avatarURL,
-    	"icon_url": e.message.author.avatarURL
-        }
+    		"name": e.message.author.username,
+    		"url": e.message.author.avatarURL,
+    		"icon_url": e.message.author.avatarURL
+        },
+        "footer":{
+        	"text": "Deleted"
+        },
+        "timestamp": e.message.timestamp
 	};
 	
-	if(event == "delete")
+	if(str == "delete")
 		return data;
 	else
-		e.message.channel.sendMessage(" ",false,data);
+		e.message.channel.sendMessage(" ",false,{"description":str});
 }
