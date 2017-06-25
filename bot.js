@@ -1,9 +1,10 @@
-var request = require('request');
-var Discordie = require('discordie');
+const request = require('request');
+const Discordie = require('discordie');
+const fs = require('fs');
 
-
-var Utilities = require("./modules/utilities.js");
-var Moderation = require("./modules/moderation.js");
+const Utilities = require("./modules/utilities.js");
+const Moderation = require("./modules/moderation.js");
+const Setter = require("./modules/setter.js");
 
 const Events = Discordie.Events;
 const discordie = new Discordie();
@@ -15,18 +16,7 @@ discordie.connect({
 	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
-var settings = {
-	"23213231231231321":{
-		deletech:null,
-		starboardch:null,
-		welcomech:null
-	},
-	"23131321312313214":{
-		deletech:null,
-		starboardch:null,
-		welcomech:null
-	}
-};
+let settings = JSON.parse(fs.readFileSync("./settings.json","utf8"));
 
 //connected to discord
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
@@ -38,10 +28,7 @@ discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
 //New member joined the server
 discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
 	//e.message.channel.sendMessage('Welcome!');
-	if(settings.hasOwnProperty(e.guild.id))
-		if(settings[e.guild.id].welcomech)
-			settings[e.guild.id].welcomech.sendMessage("Welcome! "+e.member.mention+" to "+e.guild.name);
-
+	Setter.welcome(e, settings);
 });
 
 //member left the server
@@ -51,18 +38,11 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
-	if(e.message != null)
-	if(settings.hasOwnProperty(e.message.guild.id))
-		if(settings[e.message.guild.id].deletech)
-			settings[e.message.guild.id].deletech.sendMessage(" ", false, fembed(e, "delete"));
+	Setter.deletelog(e, settings)
 });
 
-discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {
-	if(e.message != null)
-	if(settings.hasOwnProperty(e.message.guild.id))
-		if(settings[e.message.guild.id].starboardch)
-
-			//e.message.channel.sendMessage("usr: "+e.user.username+" channel: "+e.channel.name+" emoji:"+JSON.stringify(e.emoji));
+discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {	
+	Setter.starboard(e, settings);
 });
 
 commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban', 'mute', 'unmute'];
@@ -84,10 +64,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 		case commands[0] : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
 			break;
 
-		case commands[1] : fembed(e, "Your random number is " + Math.round(Math.random()*100));
+		case commands[1] : Utilities.fembed(e, "Your random number is " + Math.round(Math.random()*100));
 			break;
 
-		case commands[2] : fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"));
+		case commands[2] : Utilities.fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"));
 			break;
 
 		case commands[3] : var str = "Commands available : \n";
@@ -96,7 +76,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				str += desc[i] + "\n" ;
 			}
 			str += "Use "+prefix+" as a prefix for the commands.";
-			fembed(e, str);
+			Utilities.fembed(e, str);
 			break;
 		
 		case commands[4] : 
@@ -149,7 +129,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case commands[9] : 
 			if(params != "")
-				fembed(e, Utilities.eightball()+", "+e.message.author.username);
+				Utilities.fembed(e, Utilities.eightball()+", "+e.message.author.username);
 			else
 				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
 			break;
@@ -195,33 +175,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case commands[17]://set
-			if(!settings.hasOwnProperty(e.message.guild.id)) settings[e.message.guild.id] = { welcomech:null, starboardch:null, deletech:null };
-			if(e.message.author.can(Discordie.Permissions.General.MANAGE_CHANNELS, e.message.guild))
-				switch(params[0]){
-					case "deletelog": settings[e.message.guild.id].deletech = e.message.channel;
-						e.message.channel.sendMessage("Deleted messages logging channel successfully set.");
-						break;
-
-					case "starboard": settings[e.message.guild.id].starboardch = e.message.channel;
-						e.message.channel.sendMessage("Starboard channel successfully set.");
-						break;
-
-					case "welcome": settings[e.message.guild.id].welcomech = e.message.channel;
-						e.message.channel.sendMessage("Welcome channel successfully set.");
-						break;
-
-					case "reset" :  settings[e.message.guild.id].deletech = null;
-									settings[e.message.guild.id].welcomech = null;
-									settings[e.message.guild.id].starboardch = null;
-						e.message.channel.sendMessage("Settings reset.");
-						break;
-
-					default: e.message.channel.sendMessage("``set welcome`` Sets the channel for welcome greetings when new members are added.\n``set deletelog`` Sets channel for deleted messages logging.\n``set starboard`` Sets the channel for starboard feature of the bot. Add a star reaction to a message to make the bot post it in starboard channel.\n``set reset`` Resets the guild settings.");
-						break;
-
-				}
-			else console.log("user doesnt have perms");
-
+			Setter.set(e, Discordie, settings, params);
 			break;
 
 		case commands[18]:
@@ -237,31 +191,16 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case "eval":
-			if(e.message.author.id == "279207740340043776")
+			if(e.message.author.id !== "279207740340043776") return;
+
+			
 			break;
+
+		case "star":
+			discordie.Messages.get(params[0]).addReaction(e.message.reactions[0].emoji);
+			break;
+
 	}
 	
 	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
 });
-
-
-function fembed(e, str){
-	const data = {
-  		"description": e.message.content,
-  		"color": 123134,
-  		"author": {
-    		"name": e.message.author.username,
-    		"url": e.message.author.avatarURL,
-    		"icon_url": e.message.author.avatarURL
-        },
-        "footer":{
-        	"text": "Deleted"
-        },
-        "timestamp": e.message.timestamp
-	};
-	
-	if(str == "delete")
-		return data;
-	else
-		e.message.channel.sendMessage(" ",false,{"description":str});
-}
