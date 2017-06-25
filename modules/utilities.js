@@ -36,6 +36,28 @@ function fembed(e, content, event){
 }
 
 module.exports = {
+	fembed:function fembed(e, str){
+		const data = {
+  			"description": e.message.content,
+  			"color": 123134,
+  			"author": {
+	    		"name": e.message.author.username,
+    			"url": e.message.author.avatarURL,
+    			"icon_url": e.message.author.avatarURL
+        	},
+        	"footer":{
+	        	"text": "Deleted"
+        	},
+        	"timestamp": e.message.timestamp
+		};
+	
+		if(str == "delete")
+			return data;
+		if(str == "starred") {data.footer.text = "Starred"; return data;}
+		else
+			e.message.channel.sendMessage(" ",false,{"description":str});
+	},
+
 	eightball: function(){
 		return ballreplies[Math.round(Math.random()*ballreplies.length)];
 	},
