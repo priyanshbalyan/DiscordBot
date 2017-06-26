@@ -18,23 +18,6 @@ var ballreplies = [
 	"Yes, definitely"
 	];
 
-function fembed(e, content, event){
-	const data = {
-  		"description": content,
-  		"color": 123134,
-  		"author": {
-    	"name": e.message.author.username,
-    	"url": "https://discordapp.com",
-    	"icon_url": e.message.author.avatarURL
-        }
-	};
-	
-	if(event == "delete")
-		e.message.channel.sendMessage(e.message.author.username+" deleted their message", false, data);
-	else
-		e.message.channel.sendMessage(" ",false,data);
-}
-
 module.exports = {
 	fembed:function fembed(e, str){
 		const data = {
@@ -50,7 +33,11 @@ module.exports = {
         	},
         	"timestamp": e.message.timestamp
 		};
-	
+		//console.log(e.message.attachments[0]);
+		if(e.message.attachments.length > 0)
+			if(str == "delete") data.description= e.message.content + "(Deleted attachment)";
+			else data["image"] = {"url": e.message.attachments[0].url};
+
 		if(str == "delete")
 			return data;
 		if(str == "starred") {data.footer.text = "Starred"; return data;}
@@ -165,10 +152,15 @@ module.exports = {
 		if(e.message.mentions.length>0) var user = e.message.mentions[0];
 		else var user = e.message.author;
 		const guildPerms = user.permissionsFor(e.message.guild);
-		console.log(guildPerms);
-		var str = "**General Permissions:**\n" + Object.keys(guildPerms.General).filter(m=>guildPerms.General[m] == true).join("\n")
-				+ "\n\n**Text Permissions:**\n" + Object.keys(guildPerms.Text).filter(m=>guildPerms.Text[m] == true).join("\n");
-		e.message.channel.sendMessage(str);
+		var embed =  {
+			"color":123134,
+			"description": "Permissions granted to "+user.mention+" : ",
+			"fields": [
+				{"name":"General Permissions", "value": Object.keys(guildPerms.General).filter(m=>guildPerms.General[m] == true).join("\n"), "inline":true},
+				{"name":"Text Permissions", "value": Object.keys(guildPerms.Text).filter(m=>guildPerms.Text[m] == true).join("\n"), "inline":true}
+			]
+		};
+		e.message.channel.sendMessage(" ",false,embed);
 	},
 
 	quote:function(e){
