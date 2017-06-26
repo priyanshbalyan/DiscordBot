@@ -161,6 +161,16 @@ module.exports = {
 		return embed;
 	},
 
+	getperms:function(e){
+		if(e.message.mentions.length>0) var user = e.message.mentions[0];
+		else var user = e.message.author;
+		const guildPerms = user.permissionsFor(e.message.guild);
+		console.log(guildPerms);
+		var str = "**General Permissions:**\n" + Object.keys(guildPerms.General).filter(m=>guildPerms.General[m] == true).join("\n")
+				+ "\n\n**Text Permissions:**\n" + Object.keys(guildPerms.Text).filter(m=>guildPerms.Text[m] == true).join("\n");
+		e.message.channel.sendMessage(str);
+	},
+
 	quote:function(e){
 		var options = {
 			url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
