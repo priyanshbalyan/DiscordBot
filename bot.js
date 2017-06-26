@@ -5,6 +5,7 @@ const fs = require('fs');
 const Utilities = require("./modules/utilities.js");
 const Moderation = require("./modules/moderation.js");
 const Setter = require("./modules/setter.js");
+const Tags = require("./modules/tags.js");
 
 const Events = Discordie.Events;
 const discordie = new Discordie();
@@ -190,6 +191,14 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			Moderation.unmute(e, params);
 			break;
 
+		case "invite":
+			e.message.channel.sendMessage("Invite me using this link - \nhttps://discordapp.com/oauth2/authorize?client_id=289776005504040960&scope=bot");
+			break;
+
+		case "getperms":
+			Utilities.getperms(e);
+			break;
+
 		case "eval":
 			if(e.message.author.id !== "279207740340043776") return;
 
@@ -200,6 +209,11 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			discordie.Messages.get(params[0]).addReaction(e.message.reactions[0].emoji);
 			break;
 
+		case "tag":
+			//params:  tagcommand tagname tagdata
+			Tags.tag(e, params);
+			
+			break;
 	}
 	
 	}catch(err){e.message.channel.sendMessage("```"+err.message+"```");}
