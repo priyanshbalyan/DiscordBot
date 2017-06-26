@@ -29,7 +29,7 @@ discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
 //New member joined the server
 discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
 	//e.message.channel.sendMessage('Welcome!');
-	Setter.welcome(e, settings);
+	Setter.welcome(e, discordie, settings);
 });
 
 //member left the server
@@ -39,11 +39,11 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
 	//embed(e, e.message.content, "delete");
-	Setter.deletelog(e, settings)
+	Setter.deletelog(e, discordie, settings)
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {	
-	Setter.starboard(e, settings);
+	Setter.starboard(e, discordie, settings);
 });
 
 commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban', 'mute', 'unmute'];
@@ -173,6 +173,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case commands[16]:
 			e.message.channel.sendMessage(params.join(" "));
+			console.log(e.message.attachments);
 			break;
 
 		case commands[17]://set
@@ -199,20 +200,23 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			Utilities.getperms(e);
 			break;
 
-		case "eval":
-			if(e.message.author.id !== "279207740340043776") return;
-
-			
-			break;
-
 		case "star":
 			discordie.Messages.get(params[0]).addReaction(e.message.reactions[0].emoji);
 			break;
 
 		case "tag":
-			//params:  tagcommand tagname tagdata
 			Tags.tag(e, params);
 			
+			break;
+
+		case "eval":
+			if(e.message.author.id !== "279207740340043776") return;
+
+			break;
+
+		case "die":
+			if(e.message.author.id !== "279207740340043776") return;
+			discordie.disconnect();
 			break;
 	}
 	
