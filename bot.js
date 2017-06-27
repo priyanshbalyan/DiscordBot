@@ -55,7 +55,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	if(!e.message.content.startsWith(prefix)) return;
 	
 	var cmd = e.message.content.split(' ')[0].split("");
-	const params = e.message.content.split(' ').slice(1);
+	const params = e.message.content.split(/\n|\s/).slice(1); //split at space and new line
 	cmd.shift();
 	cmd = cmd.join("");
 
