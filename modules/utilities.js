@@ -19,6 +19,13 @@ var ballreplies = [
 	];
 
 module.exports = {
+
+	cleancode:function(text){
+		if(typeof(text) === "string")
+			return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g,"@"+String.fromCharCode(8203));
+		return text;
+	},
+
 	fembed:function fembed(e, str){
 		const data = {
   			"description": e.message.content,
@@ -260,7 +267,7 @@ module.exports = {
 					"author":{
 						"name": "Love between "+resp.fname+" and "+resp.sname+" is "+resp.percentage+"%"
 					},
-					"description":":revolving_hearts:  "+resp.result+"\n"+s
+					"description":":revolving_hearts:  "+resp.result+"\n\nHearts: "+s
 				};
 			}else{
 				var embed = {
@@ -281,23 +288,25 @@ module.exports = {
 		request(options, (err,res,body) => {
 			if(!err){
 				var resp = JSON.parse(body);
+				//console.log(resp);
 				var embed = {
 					"color":123134,
 					"author":{
-						"name": "Defintion for "+term+" by "+resp.list[0].author
+						"name": "Defintion for \""+term+"\" by "+resp.list[0].author
 					},
 					"description":resp.list[0].definition,
 					"thumbnail":{
-						"url":"http/error.urbandictionary.com/logo.png?width=89&height=29"
+						"url":"http://error.urbandictionary.com/logo.png?width=89&height=29"
 					},
 					"fields":[{
-						"name":"Example",
+						"name":"Examples",
 						"value":resp.list[0].example
 					}],
 					"footer":{
 						"text":resp.list[0].thumbs_up+" :thumbsup: | :thumbsdown: "+resp.list[0].thumbs_down
 					}
 				};
+				
 			}else{
 				var embed = {
 					"description": "Can't fetch data from urban dictionary"
@@ -305,6 +314,30 @@ module.exports = {
 			}
 			e.message.channel.sendMessage(" ", false, embed);
 		});
+	},
+
+	helpmsg:function(e, prefix, avatar){
+		var embed = {
+			"color":123134,
+			"author":{
+				"name":"Commands available",
+				"icon_url":avatar
+			},
+			//"timestamp":Date.now(),
+			"description":"Use "+prefix+" as a prefix for these commands",
+			"fields":[
+				{"name":"Fun", "value":"**rng, flipcoin, tag, 8ball, lovecalc, weather, quote, say, urban**"},
+				{"name":"Moderation", "value":"**kick, ban, set, mute(soon), purge(soon)**"},
+				{"name":"Utilities", "value":"**ping, clean, avatar, getroles, getperms, serverinfo, userinfo, emote, invite**"}
+			],
+			"thumbnail":{
+				"url":avatar
+			},
+			"footer":{
+				"text":"Type help after some commands for more info"
+			}
+		};
+		e.message.channel.sendMessage(" ", false, embed);
 	}
 
 };
