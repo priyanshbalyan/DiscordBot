@@ -59,28 +59,23 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	cmd.shift();
 	cmd = cmd.join("");
 
-	console.log(params);
+	//console.log(params);
 	try{
 	switch(cmd){
-		case commands[0] : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
+		case 'ping' : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
 			break;
 
-		case commands[1] : Utilities.fembed(e, "Your random number is " + Math.round(Math.random()*100));
+		case 'rng' : Utilities.fembed(e, "Your random number is " + Math.round(Math.random()*100));
 			break;
 
-		case commands[2] : Utilities.fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"));
+		case 'flipcoin' : Utilities.fembed(e, "Its " + (Math.random() > 0.5 ? "Heads" : "Tails"));
 			break;
 
-		case commands[3] : var str = "Commands available : \n";
-			for(var i=0 ; i<commands.length ; i++){
-				str += "**"+commands[i]+"**" + "\n" ;
-				str += desc[i] + "\n" ;
-			}
-			str += "Use "+prefix+" as a prefix for the commands.";
-			Utilities.fembed(e, str);
+		case 'help' : 
+			Utilities.helpmsg(e, prefix, discordie.User.avatarURL);
 			break;
 		
-		case commands[4] : 
+		case 'getroles' : 
 			if(e.message.mentions.length>0) var guildmember = discordie.Users.getMember(e.message.guild,e.message.mentions[0]);
 			else var guildmember = e.message.member;
 			var roleNames = guildmember.roles.map(role => role.name);
@@ -93,10 +88,9 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 				"description":str
 			};
 			e.message.channel.sendMessage(" ", false, embed);
-
 			break;
 		
-		case commands[5] : 
+		case 'avatar' : 
 			if(e.message.mentions.length>0) var user = e.message.mentions[0];
 			else var user = e.message.author;
 			var embed = {
@@ -111,13 +105,15 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			e.message.channel.sendMessage(" ",false,embed);
 			break;
 		
-		case commands[6] : Utilities.quote(e);
+		case 'quote' : Utilities.quote(e);
 			break;
 		
-		case commands[7] : Utilities.weather(e, params) ;
+		case 'weather' : 
+			if(params != "") Utilities.weather(e, params) ;
+			else e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"weather <location>``"); 
 			break;
 		
-		case commands[8] : 
+		case 'clean' : 
 			e.message.channel.fetchMessages()
 			.then(obj => {
 				let msgarray = obj.messages;
@@ -128,94 +124,104 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 			break;
 
-		case commands[9] : 
+		case '8ball' : 
 			if(params != "")
 				Utilities.fembed(e, Utilities.eightball()+", "+e.message.author.username);
 			else
 				e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``"+prefix+"8ball <question>``");
 			break;
 
-		case commands[10] :
+		case 'serverinfo' :
 			var guild = e.message.guild;
 			e.message.channel.sendMessage(" ",false,Utilities.guildinfo(guild,discordie));
 			break;
 
-		case commands[11] :
+		case 'userinfo' :
 			if(e.message.mentions.length>0) var user = e.message.mentions[0];
 			else var user = e.message.author;
 			
 			e.message.channel.sendMessage(" ", false, Utilities.userinfo(e, user));
 			break;
 
-		case commands[12] :
+		case 'emote' :
 			let regex = /(<:([^>]+):(\d+)>)/ig;
 			match = regex.exec(e.message.content);
 			var emojiurl = e.message.guild.getEmojiURL(match[3]);
 			e.message.channel.sendMessage("Emoji Name: "+match[2]+"\n"+emojiurl);
 			break;
 
-		case commands[13] :
+		case 'lovecalc' :
 			if(e.message.mentions.length>=2){
 				var fname = e.message.mentions[0].username;
 				var sname = e.message.mentions[1].username;
 				Utilities.lovecalc(e, fname,sname);
 			}else
-				e.message.channel.sendMessage("The Correct usage is\n``"+prefix+"lovecalc <mention1> <mention2>``");
+				e.message.channel.sendMessage("The Correct usage is ``"+prefix+"lovecalc <mention1> <mention2>``");
 			break;
 
-		case commands[14]:
+		case 'kick' :
 			Moderation.kick(e, Discordie);
 			break;
 
-		case commands[15]:
+		case 'ban' :
 			Moderation.ban(e, Discordie);
 			break;
 
-		case commands[16]:
+		case 'say' :
 			e.message.channel.sendMessage(params.join(" "));
 			console.log(e.message.attachments);
 			break;
 
-		case commands[17]://set
+		case 'set' ://set
 			Setter.set(e, Discordie, settings, params);
 			break;
 
-		case commands[18]:
+		case 'urban' :
 			Utilities.urban(e, params);
 			break;
 
-		case commands[19]:
-			Moderation.mute(e, params);
+		case 'mute' :
+			//Moderation.mute(e, params);
 			break;
 
-		case commands[20]:
-			Moderation.unmute(e, params);
+		case 'unmute' :
+			//Moderation.unmute(e, params);
 			break;
 
-		case "invite":
+		case 'invite' :
 			e.message.channel.sendMessage("Invite me using this link - \nhttps://discordapp.com/oauth2/authorize?client_id=289776005504040960&scope=bot");
 			break;
 
-		case "getperms":
+		case 'getperms' :
 			Utilities.getperms(e);
 			break;
 
-		case "star":
+		case 'star' :
 			discordie.Messages.get(params[0]).addReaction(e.message.reactions[0].emoji);
 			break;
 
-		case "tag":
+		case 'tag' :
 			Tags.tag(e, params);
-			
 			break;
 
-		case "eval":
+		case 'eval' :
 			if(e.message.author.id !== "279207740340043776") return;
+			try{
+				const code = e.message.content.split(" ").slice(1).join(" ");
+				let evaled = eval(code);
 
+				if(typeof(evaled) !== "string")
+					evaled = require("util").inspect(evaled);
+
+				e.message.channel.sendMessage(Utilities.cleancode(evaled), {code: "xl"});
+			}catch(err){
+				e.message.channel.sendMessage("```xl\n"+Utilities.cleancode(err)+"\n```");
+			}
 			break;
 
-		case "die":
+		case 'die' :
 			if(e.message.author.id !== "279207740340043776") return;
+			console.log("Disconnecting...");
 			discordie.disconnect();
 			break;
 	}
