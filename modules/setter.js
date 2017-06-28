@@ -50,7 +50,7 @@ module.exports = {
 	welcome:function(e, discordie, settings){
 		if(settings.hasOwnProperty(e.guild.id) && settings[e.guild.id].welcomech){
 			var channel = discordie.Channels.get(settings[e.guild.id].welcomech);
-			channel.sendMessage("Welcome! "+e.member.mention+" to "+e.guild.name);
+			channel.sendMessage(e.member.mention+"Welcome "+" to "+e.guild.name +" !");
 		}
 	},
 
