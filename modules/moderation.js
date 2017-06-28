@@ -1,3 +1,5 @@
+
+
 module.exports = {
 	kick:function(e, Discordie){
 		if(e.message.mentions.length>0)
@@ -17,21 +19,30 @@ module.exports = {
 	},
 
 	mute:function(e, params){
-		e.message.guild.createRole().then(role=>{
-			var perms = role.permissions;
-			perms.Text.SEND_MESSAGES = false;
-			perms.Text.ATTACH_FILES = false;
-			perms.Text.SEND_TTS_MESSAGES = false;
-			role.commit("Muted", "000000", "false", "false");
-		}).catch(err => console.log("Failed to create role:",err));
-		role = e.message.guild.roles.find(r=>r.name=="Muted");
-		e.message.mentions[0].assignRole(role);
+		Role = e.message.guild.roles.find(r => r.name == "Muted");
+		if(!Role)
+			e.message.guild.createRole().then(role=>{
+				var perms = role.permissions;
+				perms.Text.SEND_MESSAGES = false;
+				perms.Text.ATTACH_FILES = false;
+				perms.Text.SEND_TTS_MESSAGES = false;
+				role.commit("Muted", "000000", "false", "false");
+				e.message.mentions[0].memberOf(e.message.guild).assignRole(role);
+			}).catch(err => console.log("Failed to create role:",err));
+		else
+			e.message.mentions[0].memberOf(e.message.guild).assignRole(Role);
+
 		e.message.channel.sendMessage(e.message.mentions[0]+" has been muted.");
+
+		muteTimeout = setTimeout(()=>{
+			e.message.mentions[0].memberOf(e.message.guild).unassignRole(role);
+			e.message.channel.sendMessage(e.message.mentions[0]+" has been unmuted.");
+		},parseInt(params[1])*60000);
 	},
 
 	unmute:function(e, params){
 		role = e.message.guild.roles.find(r=>r.name=="Muted");
-		e.message.mentions[0].unassignRole(role);
+		e.message.mentions[0].memberOf(e.message.guild).unassignRole(role);
 		e.message.channel.sendMessage(e.message.mentions[0]+" has been unmuted.");
 	}
 };
