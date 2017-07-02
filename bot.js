@@ -10,11 +10,11 @@ const Tags = require("./modules/tags.js");
 const Events = Discordie.Events;
 const discordie = new Discordie();
 
-var prefix = "]";
+var prefix = ";";
 
 var Key = require('./Key.js');
 discordie.connect({
-	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
+	token: Key.getAlphaBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
 let settings = JSON.parse(fs.readFileSync("./settings.json","utf8"));
@@ -194,17 +194,16 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			e.message.channel.sendMessage("Invite me using this link - \nhttps://discordapp.com/oauth2/authorize?client_id=289776005504040960&scope=bot");
 			break;
 
+		case 'addrole':
+			Setter.addrole(e, params, discordie);
+			break;
+
 		case 'getperms' :
 			Utilities.getperms(e);
 			break;
 
-		case 'addselfrole' :
-			Moderation.addselfrole(e, params, discordie);
-			break;
-
-		case 'g':
-		case 'google':
-			Utilties.googlesearch(e, params);
+		case 'google': case 'g':
+			Utilities.googlesearch(e, params);
 			break;
 
 		case 'star' :
