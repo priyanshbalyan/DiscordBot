@@ -269,11 +269,8 @@ module.exports = {
 					},
 					"description":":revolving_hearts:  "+resp.result+"\n\nHearts: "+s
 				};
-			}else{
-				var embed = {
-					"description": "Can't fetch love data."
-				};
-			}
+			}else var embed = {"description": "Can't fetch love data."};
+			
 			e.message.channel.sendMessage(" ", false, embed);
 		});
 	},
@@ -307,12 +304,24 @@ module.exports = {
 					}
 				};
 				
-			}else{
-				var embed = {
-					"description": "Can't fetch data from urban dictionary"
-				}
-			}
+			}else var embed = {"description": "Can't fetch data from urban dictionary"};
+			
 			e.message.channel.sendMessage(" ", false, embed);
+		});
+	},
+
+	googlesearch:function(e, params){
+		var url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyCaGnVEJoO7JJLaIafX5t1dYYeRjSED8tw&cx=017477852080590256610:hyzdrv6behg&q="+params.join(" ");
+		request(options, (err,res,body) => {
+			if(!err){
+				var resp = JSON.parse(body);
+				//console.log(resp);
+				var str = resp.items[0].title+"\n"+resp.items[0].article.articlebody+"\n"+resp.items[0].link
+						+"\n\n**See also:**\n"+resp.items[1].link+"\n"+resp.items[2].link;
+				
+			}else var str = "description": "Can't fetch data from google.";
+			
+			e.message.channel.sendMessage(str);
 		});
 	},
 
@@ -327,7 +336,7 @@ module.exports = {
 			"description":"Use "+prefix+" as a prefix for these commands",
 			"fields":[
 				{"name":"Fun", "value":"**rng, flipcoin, tag, 8ball, lovecalc, weather, quote, say, urban**"},
-				{"name":"Moderation", "value":"**kick, ban, set, mute(soon), purge(soon)**"},
+				{"name":"Moderation", "value":"**kick, ban, set, mute, unmute, purge**"},
 				{"name":"Utilities", "value":"**ping, clean, avatar, getroles, getperms, serverinfo, userinfo, emote, invite**"}
 			],
 			"thumbnail":{
