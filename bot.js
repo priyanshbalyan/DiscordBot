@@ -12,7 +12,7 @@ const discordie = new Discordie();
 
 var prefix = "]";
 
-var Key = require('./key.js');
+var Key = require('./Key.js');
 discordie.connect({
 	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
@@ -46,8 +46,6 @@ discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {
 	Setter.starboard(e, discordie, settings);
 });
 
-commands = ['ping', 'rng', 'flipcoin', 'help', 'getroles', 'avatar', 'quote', 'weather', 'clean', '8ball', 'serverinfo', 'userinfo', 'emote', 'lovecalc', 'kick', 'ban', 'say', 'set', 'urban', 'mute', 'unmute'];
-desc = ['Check ping', 'Gives a random number between 1 to 100', 'Flips a coin', 'Shows this message', 'Get the roles of the mentioned user', 'Shows user\'s avatar', 'Get a quote', 'Get weather data for a location \nUsage : ``weather <Location>``', 'Cleans messages', 'Ask 8ball anything', 'Get Server Info', 'Get user info', 'Get Emote URL', 'Calculates love between people\nUsage: ``lovecalc <mention1> <mention2>``', 'Kicks a user', 'Bans a user', 'Make the bot say something', 'Set various channels for specific features of the bot.', 'Get definition of the word from urban dictionary', 'Mute a user for a specified time', 'Unmutes the muted user'];
 //new message on server
 discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	//console.log(e.message.author.username);     
@@ -59,7 +57,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	cmd.shift();
 	cmd = cmd.join("");
 
-	//console.log(params);
+	console.log(params);
 	try{
 	switch(cmd){
 		case 'ping' : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
@@ -144,10 +142,14 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'emote' :
-			let regex = /(<:([^>]+):(\d+)>)/ig;
-			match = regex.exec(e.message.content);
-			var emojiurl = e.message.guild.getEmojiURL(match[3]);
-			e.message.channel.sendMessage("Emoji Name: "+match[2]+"\n"+emojiurl);
+			if(params != ""){
+				let regex = /(<:([^>]+):(\d+)>)/ig;
+				match = regex.exec(e.message.content);
+				var emojiurl = e.message.guild.getEmojiURL(match[3]);
+				e.message.channel.sendMessage("Emoji Name: "+match[2]+"\n"+emojiurl);
+			}
+			else
+				e.message.channel.sendMessage("The correct usage is ``"+prefix+"emote :emoji:``");
 			break;
 
 		case 'lovecalc' :
@@ -160,11 +162,11 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'kick' :
-			Moderation.kick(e, Discordie);
+			Moderation.kick(e, discordie);
 			break;
 
 		case 'ban' :
-			Moderation.ban(e, Discordie);
+			Moderation.ban(e, discordie);
 			break;
 
 		case 'say' :
@@ -173,7 +175,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'set' ://set
-			Setter.set(e, Discordie, settings, params);
+			Setter.set(e, Discordie, settings, params, discordie);
 			break;
 
 		case 'urban' :
@@ -181,11 +183,11 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'mute' :
-			//Moderation.mute(e, params);
+			Moderation.mute(e, params, discordie);
 			break;
 
 		case 'unmute' :
-			//Moderation.unmute(e, params);
+			Moderation.unmute(e, params);
 			break;
 
 		case 'invite' :
@@ -194,6 +196,15 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case 'getperms' :
 			Utilities.getperms(e);
+			break;
+
+		case 'addselfrole' :
+			Moderation.addselfrole(e, params, discordie);
+			break;
+
+		case 'g':
+		case 'google':
+			Utilties.googlesearch(e, params);
 			break;
 
 		case 'star' :
