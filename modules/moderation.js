@@ -13,10 +13,10 @@ module.exports = {
 	ban:function(e, discordie){
 		if(e.message.mentions.length>0)
 			if(!discordie.User.can(4, e.message.guild)){ e.message.channel.sendMessage("I don't have enough permissions to ban. ``Required Perm: BAN_MEMBERS``"); return; }
-			if(e.message.author.can(Discordie.Permissions.General.BAN_MEMBERS, e.message.guild))
-				e.message.guild.ban(e.message.mentions[0], 1).then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been banned!***")).catch(err=>e.message.channel.sendMessage("Can't ban member.\n"+err.message));
-			else
-				console.log("user doesn't have the perm to ban");
+				if(e.message.author.can(Discordie.Permissions.General.BAN_MEMBERS, e.message.guild))
+					e.message.guild.ban(e.message.mentions[0], 1).then(()=>e.message.channel.sendMessage("***"+e.message.mentions[0].username+"#"+e.message.mentions[0].discriminator+" has been banned!***")).catch(err=>e.message.channel.sendMessage("Can't ban member.\n"+err.message));
+				else
+					console.log("user doesn't have the perm to ban");
 	},
 
 	mute:function(e, params, discordie){
@@ -62,16 +62,5 @@ module.exports = {
 		e.message.mentions[0].memberOf(e.message.guild).unassignRole(role);
 		e.message.channel.sendMessage(params[0]+" has been unmuted.");
 		clearTimeout(muteTimeout);
-	},
-
-	addselfrole:function(e, params, discordie){
-		if(!e.message.author.can(268435456, e.message.guild)) return;
-		if(!discordie.User.can(268435456, e.message.guild)){ e.message.channel.sendMessage("I don't have enough permissions to add a self assignable roles. ``Required Perm: MANAGE_ROLES``"); return; }
-		role = e.message.guild.roles.find(r=>r.name == params.join(""));
-		if(!role)
-			e.message.channel.sendMessage("Can't find a role with the name.");
-		else
-			settings[e.message.guild]["selfroles"].push(role.name);
-
 	}
 };
