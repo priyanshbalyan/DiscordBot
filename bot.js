@@ -10,11 +10,11 @@ const Tags = require("./modules/tags.js");
 const Events = Discordie.Events;
 const discordie = new Discordie();
 
-var prefix = ";";
+var prefix = "]";
 
 var Key = require('./Key.js');
 discordie.connect({
-	token: Key.getAlphaBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
+	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
 let settings = JSON.parse(fs.readFileSync("./settings.json","utf8"));
@@ -74,8 +74,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 		
 		case 'getroles' : 
-			if(e.message.mentions.length>0) var guildmember = discordie.Users.getMember(e.message.guild,e.message.mentions[0]);
-			else var guildmember = e.message.member;
+			var guildmember = (e.message.mentions[0]) ? discordie.Users.getMember(e.message.guild,e.message.mentions[0]) : e.message.member;
 			var roleNames = guildmember.roles.map(role => role.name);
 			var str = (roleNames.join("\n") || "No Roles");
 			var embed = {
@@ -89,8 +88,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 		
 		case 'avatar' : 
-			if(e.message.mentions.length>0) var user = e.message.mentions[0];
-			else var user = e.message.author;
+			var user = (e.message.mentions[0]) ? e.message.mentions[0] : e.message.author;
 			var embed = {
 				"color":123134,
 				"author":{
@@ -112,10 +110,9 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 		
 		case 'clean' : 
-			e.message.channel.fetchMessages()
-			.then(obj => {
+			e.message.channel.fetchMessages().then(obj => {
 				let msgarray = obj.messages;
-				msgarray = msgarray.filter(m => m.author.id === discordie.User.id);   //ES2017 syntax
+				msgarray = msgarray.filter(m => m.author.id === discordie.User.id);
 				msgarray.length = 100 + 1;
 				msgarray.map(m => m.delete().catch(console.error));
 			});
@@ -135,9 +132,8 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'userinfo' :
-			if(e.message.mentions.length>0) var user = e.message.mentions[0];
-			else var user = e.message.author;
-			
+			var user = (e.message.mentions[0]) ? e.message.mentions[0] : e.message.author;
+						
 			e.message.channel.sendMessage(" ", false, Utilities.userinfo(e, user));
 			break;
 
@@ -195,9 +191,16 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			break;
 
 		case 'addrole':
-			Setter.addrole(e, params, discordie);
+			Setter.addrole(e, params, settings);
 			break;
 
+		case 'removerole':
+			Setter.removerole(e, params, settings);
+			break;
+
+		case 'selfrolelist': e.message.channel.sendMessage("Self-assignable roles : "+(settings[e.message.guild.id].selfroles.join(", ")||"No Self-assignable roles set."));
+			break;
+			
 		case 'getperms' :
 			Utilities.getperms(e);
 			break;
@@ -212,6 +215,12 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case 'tag' :
 			Tags.tag(e, params);
+			break;
+
+		case 'setgame':
+			if(e.message.author.id !== "279207740340043776") return;
+			var game = {"name": params.join(" ")};
+			discordie.User.setGame(game);
 			break;
 
 		case 'eval' :
