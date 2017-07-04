@@ -119,6 +119,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 			break;
 
+		case 'purge':
+				Moderation.purge(e, params, discordie);
+			break;
+
 		case '8ball' : 
 			if(params != "")
 				Utilities.fembed(e, Utilities.eightball()+", "+e.message.author.username);
@@ -207,6 +211,10 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 
 		case 'google': case 'g':
 			Utilities.googlesearch(e, params);
+			break;
+
+		case 'yomama': 
+			Utilities.yomama(e, (e.message.mentions[0])?e.message.mentions[0].username : e.message.author.username);
 			break;
 
 		case 'star' :
