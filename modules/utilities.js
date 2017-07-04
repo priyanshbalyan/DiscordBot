@@ -311,6 +311,18 @@ module.exports = {
 		});
 	},
 
+	yomama:function(e, usr){
+		var url = "https://api.apithis.net/yomama.php";
+		request(url, (err,res,body) => {
+			if(!err){
+				console.log(body);
+				var embed = {"color":123134,"author":{"name":usr+", "+body}}
+			}else
+				var embed = {"description":"Can't fetch data."};
+			e.message.channel.sendMessage(" ", false, embed);
+		});
+	},
+
 	googlesearch:function(e, params){
 		var url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyCaGnVEJoO7JJLaIafX5t1dYYeRjSED8tw&cx=017477852080590256610:hyzdrv6behg&q="+params.join(" ");
 		request(url, (err,res,body) => {
@@ -324,6 +336,13 @@ module.exports = {
 			
 			e.message.channel.sendMessage(str);
 		});
+	},
+
+	botinfo:function(e){
+		var embed = {
+
+		}
+		e.message.channel.sendMessage(" ", false, embed);
 	},
 
 	helpmsg:function(e, prefix, avatar){
