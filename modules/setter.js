@@ -2,6 +2,15 @@ const fs = require('fs');
 const Utilities = require('./utilities.js');
 var currentstarred = "";
 
+function enotif(e, flag, str){
+	color = flag==1 ? 123134 : 0xe91e63;
+	var embed = {
+		"color":color,
+		"description":str
+	};
+	e.message.channel.sendMessage(" ", false, embed).then().catch(console.error);
+}
+
 module.exports = {
 	set:function(e, Discordie, settings, params, discordie){
 		if(!settings.hasOwnProperty(e.message.guild.id))
@@ -9,39 +18,49 @@ module.exports = {
 		if(e.message.author.can(Discordie.Permissions.General.MANAGE_CHANNELS, e.message.guild))
 			switch(params[0]){
 				case "deletelog": settings[e.message.guild.id].deletech = e.message.channel.id;
-					e.message.channel.sendMessage("Deleted messages logging successfully set in <#"+e.message.channel.id+">.");
+					enotif(e,1,"Deleted messages logging successfully set in <#"+e.message.channel.id+">.");
 					break;
 
 				case "starboard": settings[e.message.guild.id].starboardch = e.message.channel.id;
-					e.message.channel.sendMessage("Starboard successfully set in <#"+e.message.channel.id+">.");
+					enotif(e,1,"Starboard successfully set in <#"+e.message.channel.id+">.");
 					break;
 
 				case "welcome": settings[e.message.guild.id].welcomech = e.message.channel.id;
-					e.message.channel.sendMessage("Welcome messages successfully set in <#"+e.message.channel.id+">.");
+					enotif(e, 1, "Welcome messages successfully set in <#"+e.message.channel.id+">.");
 					break;
 
 				case "selfrole":
-					if(!e.message.author.can(268435456, e.message.guild)) return;  //MANAGE_ROLES permission
-					if(!discordie.User.can(268435456, e.message.guild)){ e.message.channel.sendMessage("I don't have enough permissions to add a self assignable roles. ``Required Perm: MANAGE_ROLES``"); return; }
 					params.shift();
-					role = e.message.guild.roles.find(r=>r.name.toLowerCase() == params.join(" ").toLowerCase());
-					if(!role)
-						e.message.channel.sendMessage("Can't find a role with that name.");
-					else{
-						if(settings[e.message.guild.id].selfroles.indexOf(params.join(" ")) == -1)
-							settings[e.message.guild.id].selfroles.push(role.name);
-						e.message.channel.sendMessage("Added "+role.name+" to the list of self-assignable roles.");
+					var param = params.join(" ").toLowerCase();
+
+					if(!e.message.author.can(268435456, e.message.guild)) return;  //MANAGE_ROLES permission
+					if(!discordie.User.can(268435456, e.message.guild)){ 
+						enotif(e, 0, "I don't have enough permissions to add a self assignable role. ``Required Perm: MANAGE_ROLES``");
+						return; 
 					}
+					
+					role = e.message.guild.roles.find(r=>r.name.toLowerCase() == param);
+					
+					if(!role){ 
+						enotif(e, 0, "Can't find a role with that name."); 
+						return; 
+					}
+
+					if(!settings[e.message.guild.id].selfroles.find(r=>r.toLowerCase()==param)){
+						settings[e.message.guild.id].selfroles.push(role.name);
+						enotif(e, 1, "Added **"+role.name+"** to the list of self-assignable roles.");
+					}else
+						enotif(e, 0, "Role is already self-assignable.");
 					break;
 
 				case "removerole":
 					if(!e.message.author.can(268435456, e.message.guild)) return;
 					params.shift();
-					if(settings[e.message.guild.id].selfroles.indexOf(params.join(" ")) != -1){
+					if(settings[e.message.guild.id].selfroles.find(r=>r.toLowerCase()==params.join(" ").toLowerCase())){
 						settings[e.message.guild.id].selfroles.splice(settings[e.message.guild.id].selfroles.indexOf(params.join(" "),1));
-						e.message.channel.sendMessage("Role removed.");
+						enotif(e, 1, "Role removed.");
 					}else
-						e.message.channel.sendMessage("No matching role found in the list");
+						enotif(e, 0, "No matching role found in the list");
 					break;
 
 				case "reset" :  
@@ -49,7 +68,7 @@ module.exports = {
 						settings[e.message.guild.id].welcomech = null;
 						settings[e.message.guild.id].starboardch = null;
 
-						e.message.channel.sendMessage("Settings reset.");
+						enotif(e, 1, "Settings reset.");
 					break;
 
 				default: 
@@ -70,7 +89,7 @@ module.exports = {
 			}
 		else console.log("user doesnt have perms");
 
-		fs.writeFile("./settings.json", JSON.stringify(settings), err => {
+		fs.writeFile("./settings.json", JSON.stringify(settings, null, 4), err => {
 			if(err) console.log(err);
 		});
 	},
@@ -97,7 +116,7 @@ module.exports = {
 			//if the reaction is a star
 			if(e.message.reactions[0].emoji.name == "⭐" && currentstarred != e.message.id && e.message.reactions[0].count > 0){
 					var channel = discordie.Channels.get(settings[e.message.guild.id].starboardch)
-					channel.sendMessage(":star: in <#"+e.message.channel.id+">",false, Utilities.fembed(e, "starred"));
+					channel.sendMessage(":star: in <#"+e.message.channel.id+"> ID:"+e.message.id,false, Utilities.fembed(e, "starred"));
 					currentstarred = e.message.id;
 			}
 		}
