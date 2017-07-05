@@ -27,7 +27,7 @@ module.exports = {
 	},
 
 	fembed:function fembed(e, str){
-		const data = {
+		var data = {
   			"description": e.message.content,
   			"color": 123134,
   			"author": {
@@ -45,11 +45,12 @@ module.exports = {
 			if(str == "delete") data.description= e.message.content + "(Deleted attachment)";
 			else data["image"] = {"url": e.message.attachments[0].url};
 
-		if(str == "delete")
-			return data;
+		if(e.message.embeds.length>0) return e.message.embeds[0];
+		
+		if(str == "delete") {data.footer.text = "Deleted" ; return data;}
 		if(str == "starred") {data.footer.text = "Starred"; return data;}
-		else
-			e.message.channel.sendMessage(" ",false,{"description":str});
+		
+		e.message.channel.sendMessage(" ",false,{"description":str});
 	},
 
 	eightball: function(){
@@ -85,6 +86,11 @@ module.exports = {
 						"name": "Region",
 						"value": guild.region,
 						"inline":true
+					},
+					{
+						"name": "Online",
+						"value": guild.members.filter(m=>m.status=="online").length,
+						"inline": true
 					},
 					{
 						"name": "Text Channels: "+guild.textChannels.length,
@@ -315,11 +321,11 @@ module.exports = {
 		var url = "https://api.apithis.net/yomama.php";
 		request(url, (err,res,body) => {
 			if(!err){
-				console.log(body);
-				var embed = {"color":123134,"author":{"name":usr+", "+body}}
+			//	console.log(body);
+				var str = usr+", "+body;
 			}else
-				var embed = {"description":"Can't fetch data."};
-			e.message.channel.sendMessage(" ", false, embed);
+				var str = "Can't fetch data.";
+			e.message.channel.sendMessage(str);
 		});
 	},
 
@@ -355,15 +361,29 @@ module.exports = {
 			//"timestamp":Date.now(),
 			"description":"Use "+prefix+" as a prefix for these commands",
 			"fields":[
-				{"name":"Fun", "value":"**rng, flipcoin, tag, 8ball, lovecalc, weather, quote, say, urban**"},
-				{"name":"Moderation", "value":"**kick, ban, set, mute, unmute, purge**"},
-				{"name":"Utilities", "value":"**ping, clean, avatar, getroles, getperms, serverinfo, userinfo, emote, invite**"}
+				{
+					"name": "New Commands",
+					"value":"**yomama, google, selfrolelist, addrole, removerole, mute, unmute**"
+				},
+				{
+					"name":"Interesting", 
+					"value":"**yomama** Makes a yo mama joke\n**google** Do a google search with the given words\n**lovecalc** Calculate love between mentioned users\n**weather** Shows weather of a location\n**quote** Get a random quote\n**urban** Gets definition of a word from urban dictionary\n**rng** Get a random number\n**flipcoin** Head or Tail?\n**tag** Create ur own tag commands with this command (Use command for more info)\n**8ball** Ask 8ball anything\n**say** Make the bot say something\n"
+				},
+				{
+					"name":"Moderation Perks", 
+					"value":"**set** Set and reset features of the bot for the guild (Use command for more info)\n**kick** Kicks mentioned user out of the guild\n**ban** Bans the mentioned user from the guild\n**mute** Mutes the mentioned user for specified time\n**unmute** Unmutes the mentioned user\n**purge** Purge number of specified messages in a channel"
+				},
+				{
+					"name":"Utilities", 
+					"value":"**ping** Checks for bot ping time\n**clean** Cleans bot messages\n**avatar** Gets user avatar\n**getroles** Get roles of the mentioned user\n**getperms** Get perms for the mentioned user\n**serverinfo** Get Information for the guild\n**userinfo** Gets mentioned user's information\n**emote** Gets the direct link for an emote\n**invite** Invite this bot to your server"
+				},
+				{
+					"name":"Roles", 
+					"value":"**selfrolelist** Gets list of self-assignable roles for the guild (Has to be set before by a mod using ``set selfrole <rolename>``\n**addrole** Assigns the role to the user if its set as a self-assignable role\n**removerole** Remove the self assignable role from the user"
+				}
 			],
 			"thumbnail":{
 				"url":avatar
-			},
-			"footer":{
-				"text":"Type help after some commands for more info"
 			}
 		};
 		e.message.channel.sendMessage(" ", false, embed);
