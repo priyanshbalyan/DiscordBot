@@ -37,7 +37,7 @@ module.exports = {
 						e.message.channel.sendMessage("No matching tag found");
 					break;
 
-				case []:
+				case undefined:
 				case "help":
 					var embed = {
 						"color":123134,
