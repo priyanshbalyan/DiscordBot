@@ -1,1 +1,11 @@
-{"326552181010595844":{"welcomech":null,"starboardch":null,"deletech":null,"selfroles":["Teal","Kata"]}}
+{
+    "326552181010595844": {
+        "welcomech": "326552298354507776",
+        "starboardch": "326552298354507776",
+        "deletech": null,
+        "leavech": null,
+        "selfroles": [
+            "Teal"
+        ]
+    }
+}
