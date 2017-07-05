@@ -12,7 +12,7 @@ const discordie = new Discordie();
 
 var prefix = "]";
 
-var Key = require('./Key.js');
+var Key = require('./key.js');
 discordie.connect({
 	token: Key.getBotToken() //Paste your Bot Application Token here instead of Key.getBotToken()
 });
@@ -22,8 +22,8 @@ let settings = JSON.parse(fs.readFileSync("./settings.json","utf8"));
 //connected to discord
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
 	console.log("connected as " + discordie.User.username);
-	var game = {name: prefix+"help"};
-	discordie.User.setGame(game);
+	var game = {type:1, name: prefix+"help", url:"https://goo.gl/ezgx4t"};
+	discordie.User.setGame(null, game);
 });
 
 //New member joined the server
@@ -57,7 +57,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 	cmd.shift();
 	cmd = cmd.join("");
 
-	console.log(params);
+	//console.log(params);
 	try{
 	switch(cmd){
 		case 'ping' : e.message.channel.sendMessage('Pong!').then(m=>m.edit('Pong! ``'+(Date.now()-start)+'ms``'));
@@ -202,7 +202,15 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			Setter.removerole(e, params, settings);
 			break;
 
-		case 'selfrolelist': e.message.channel.sendMessage("Self-assignable roles : "+(settings[e.message.guild.id].selfroles.join(", ")||"No Self-assignable roles set."));
+		case 'selfrolelist': 
+			var embed = {
+				"color":123134,
+				"author":{
+					"name": "Self-assignable roles"
+				},
+				"description":(settings[e.message.guild.id].selfroles.join("\n")||"No Self-assignable roles set.")
+			};
+			e.message.channel.sendMessage(" ", false, embed);
 			break;
 			
 		case 'getperms' :
@@ -229,6 +237,11 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e=>{
 			if(e.message.author.id !== "279207740340043776") return;
 			var game = {"name": params.join(" ")};
 			discordie.User.setGame(game);
+			break;
+
+		case 'setusername':
+			if(e.message.author.id !== "279207740340043776") return;
+			discordie.User.setUsername(params.join(" "));
 			break;
 
 		case 'eval' :
