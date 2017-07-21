@@ -1,11 +1,12 @@
 {
+    "twitter": [],
     "326552181010595844": {
-        "welcomech": "326552298354507776",
+        "welcomech": null,
         "starboardch": "326552298354507776",
-        "deletech": null,
+        "deletech": "326552298354507776",
         "leavech": null,
         "selfroles": [
-            "Teal"
+            "Candy Red"
         ]
     }
 }
