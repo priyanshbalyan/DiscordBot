@@ -17,7 +17,7 @@ exports.run = (e, params, discordie) => {
 	"Yes, definitely"
 	];
 
-	ballreply = ballreplies[Math.round(Math.random()*ballreplies.length)];
+	ballreply = ballreplies[Math.floor(Math.random()*ballreplies.length)];
 	
 	if(params != "")
 		e.message.channel.sendMessage(ballreply+", "+e.message.author.username);
