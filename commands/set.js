@@ -30,6 +30,10 @@ exports.run = (e, params, discordie) => {
 					enotif(e, 1, "Welcome messages successfully set in <#"+e.message.channel.id+">.");
 					break;
 
+				case "goodbye": settings[e.message.guild.id].leavech = e.message.channel.id;
+					enotif(e, 1, "Goodbye messages successfully set in <#"+e.message.channel.id+">.");
+					break;				
+
 				case "selfrole":
 					params.shift();
 					var param = params.join(" ").toLowerCase();
@@ -68,7 +72,7 @@ exports.run = (e, params, discordie) => {
 						settings[e.message.guild.id].deletech = null;
 						settings[e.message.guild.id].welcomech = null;
 						settings[e.message.guild.id].starboardch = null;
-
+						settings[e.message.guild.id].leavech = null;
 						enotif(e, 1, "Settings reset.");
 					break;
 
@@ -77,6 +81,7 @@ exports.run = (e, params, discordie) => {
 						color:123134,
 						"fields":[
 							{"name":'set welcome', "value":"Sets the channel for welcome greetings when new members are added."},
+							{"name":'set goodbye', "value":"Sets the channel for goodbye messages when members leave."},
 							{"name":'set deletelog', "value":"Sets the channel for deleted messages logging."},
 							{"name":'set starboard', "value":"Sets the channel for starboard feature of the bot. Add a star reaction to a message to make the bot post it in starboard channel."},
 							{"name":'set selfrole', "value":"Adds a role to a list of roles which can be self-assigned by users through the 'addrole' command. Usage: ``set selfrole <rolename>``"},
