@@ -46,9 +46,20 @@ module.exports = {
         }
     },
 
+    goodbye: function(e, discordie, settings) {
+        if (settings.hasOwnProperty(e.guild.id) && settings[e.guild.id].leavech) {
+            var channel = discordie.Channels.get(settings[e.guild.id].leavech);
+            channel.sendMessage(e.user.username+"#"+e.user.discriminator+" left the guild.");
+        }
+    },
+
     deletelog: function(e, discordie, settings) {
         //if guild has set delete channel
-        if (e.message && settings.hasOwnProperty(e.message.guild.id) && settings[e.message.guild.id].deletech && e.message.author.bot == false) {
+        if (e.message 
+        	&& settings.hasOwnProperty(e.message.guild.id) 
+        	&& settings[e.message.guild.id].deletech 
+        	&& e.message.author.bot == false 
+        	&& !e.message.content.startsWith("]spoil")) {
             var channel = discordie.Channels.get(settings[e.message.guild.id].deletech);
             channel.sendMessage(" ", false, fembed(e, "delete"));
         }
@@ -56,7 +67,9 @@ module.exports = {
 
     starboard: function(e, discordie, settings) {
         //if starboard is set in the guild
-        if (e.message && settings.hasOwnProperty(e.message.guild.id) && settings[e.message.guild.id].starboardch) {
+        if (e.message 
+        	&& settings.hasOwnProperty(e.message.guild.id) 
+        	&& settings[e.message.guild.id].starboardch) {
             console.log(JSON.stringify(e.message.reactions))
                 //if the reaction is a star
             if (e.emoji.name.charCodeAt() == 11088 && currentstarred != e.message.id && e.message.reactions[0].count > 0) {
