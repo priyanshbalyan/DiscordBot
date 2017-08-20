@@ -31,14 +31,18 @@ discordie.Dispatcher.on(Events.GUILD_MEMBER_ADD, e => {
 //member left the server
 discordie.Dispatcher.on(Events.GUILD_MEMBER_REMOVE, e => {
     //e.message.channel.sendMessage('A User has left this channel.');
+    let settings = JSON.parse(fs.readFileSync('./settings.json','utf8'));
+    Setter.goodbye(e, discordie, settings);
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_DELETE, e => {
     //embed(e, e.message.content, "delete");
+    let settings = JSON.parse(fs.readFileSync('./settings.json','utf8'));
     Setter.deletelog(e, discordie, settings)
 });
 
 discordie.Dispatcher.on(Events.MESSAGE_REACTION_ADD, e => {
+    let settings = JSON.parse(fs.readFileSync('./settings.json','utf8'));
     Setter.starboard(e, discordie, settings);
 });
 
