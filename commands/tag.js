@@ -10,8 +10,11 @@ exports.run = (e, params, discordie) => {
 			
 			switch(params[0]){
 				case "create":
+					//console.log(params[1])
 					if(tagdata[gid].hasOwnProperty(params[1]))
-						e.message.channel.sendMessage('Tag \"'+params[1]+'\" already exists.');
+						return e.message.channel.sendMessage('Tag \"'+params[1]+'\" already exists.');
+					else if(["create","delete","list","info","help"].indexOf(params[1]) != -1)
+						return e.message.channel.sendMessage("Can't create a tag with a reserved keyword as a name.");
 					else{
 						tagdata[gid][params[1]] = {"value": params.slice(2).join(" "), "user": e.message.author};
 						e.message.channel.sendMessage('Tag \"'+params[1]+'\" successfully created.');
@@ -20,8 +23,12 @@ exports.run = (e, params, discordie) => {
 
 				case "delete":
 					if(tagdata[gid].hasOwnProperty(params[1])){
-						delete tagdata[gid][params[1]];
-						e.message.channel.sendMessage("Tag deleted.");
+						if(tagdata[gid][params[1]].user.id == e.message.author.id
+							|| e.message.author.can(2 | 4 | 16 | 32 | 268435456, e.message.guild)){
+							delete tagdata[gid][params[1]];
+							e.message.channel.sendMessage("Tag deleted.");
+						}else
+							e.message.channel.sendMessage("You don't own this tag.");
 					}
 					else
 						e.message.channel.sendMessage("No matching tag found.")
@@ -33,7 +40,7 @@ exports.run = (e, params, discordie) => {
 
 				case "info":
 					if(tagdata[gid].hasOwnProperty(params[1]))
-						e.message.channel.sendMessage("Owned by : "+tagdata[gid][params[1]].user.username+"#"+tagdata[gid][params[1]].discriminator);
+						e.message.channel.sendMessage("Owned by : "+tagdata[gid][params[1]].user.username+"#"+tagdata[gid][params[1]].user.discriminator);
 					else
 						e.message.channel.sendMessage("No matching tag found");
 					break;
@@ -59,7 +66,7 @@ exports.run = (e, params, discordie) => {
 						e.message.channel.sendMessage("No matching tag found.");
 			}
 			
-			fs.writeFile("./tagdata.json", JSON.stringify(tagdata), err => {
+			fs.writeFile("./tagdata.json", JSON.stringify(tagdata, null, 4), err => {
 				if(err) console.log(err);
 			});
 	
