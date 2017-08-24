@@ -10,5 +10,7 @@ exports.run = (e, params, discordie) => {
 			{"name":"Text Permissions", "value": Object.keys(guildPerms.Text).filter(m=>guildPerms.Text[m] == true).join("\n"), "inline":true}
 		]
 	};
-	e.message.channel.sendMessage(" ",false,embed);
+	e.message.channel.sendMessage(" ",false,embed).then().catch(err=>{
+		e.message.channel.sendMessage("General Permissions\n"+Object.keys(guildPerms.General).filter(m=>guildPerms.General[m] == true).join("\n")+"\nText Permissions\n"+ Object.keys(guildPerms.Text).filter(m=>guildPerms.Text[m] == true).join("\n"));
+	});
 }
