@@ -1,0 +1,24 @@
+{
+	"COLOR":"",
+
+	"BOT_TOKEN": "Your_discord_bot_token",
+	
+	"ALPHA_BOT_TOKEN": "option_bot_token_to_test_new_features_on",
+	
+	"SELF_TOKEN": "your_own_discord_account_token",
+	
+	"MASHAPE_KEY": "Mashape_api_key_needed_for_features_like_weather_quotes_lovecalc_etc",
+	
+	"GOOGLE_SEARCH_API_KEY": "search_api_key_for_bot_google_search_functionality",
+
+	"TWITTER_CONSUMER_KEY": "twitt_consumer_key",
+	"TWITTER_CONSUMER_SECRET": "twitter_consumer_secret",
+	"TWITTER_ACCESS_TOKEN_KEY": "twitter_access_token_key",
+	"TWITTER_ACCESS_TOKEN_SECRET": "twitter_access_token_secret",
+
+	"WEATHER_API_KEY":"open_map_weather_api_key",
+
+	"MAL_USERNAME": "MyAnimeList.net_username",
+	"MAL_PASSWORD": "MyAnimeList.net_password"
+
+}
