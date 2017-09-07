@@ -10,14 +10,15 @@ const discordie = new Discordie({ autoReconnect: true });
 let prefix = ";";
 let settings = JSON.parse(fs.readFileSync('./settings.json'));
 
+const Config = require('./config.json');
 discordie.connect({
-    token: require('./key.js').getAlphaBotToken(), //Paste your Bot Application Token here instead of Key.getBotToken()
+    token: Config.ALPHA_BOT_TOKEN, //Paste your Bot Application Token here instead of Key.getBotToken()
 });
 
 //connected to discord
 discordie.Dispatcher.on(Events.GATEWAY_READY, e => {
     console.log("connected as " + discordie.User.username);
-    var game = { type: 1, name: prefix + "help", url: "https://goo.gl/ezgx4t" };
+    var game = { type: 0, name: prefix + "help", url: "https://goo.gl/ezgx4t" };
     discordie.User.setGame(null, game);
 
 });
