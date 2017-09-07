@@ -1,10 +1,12 @@
 var request = require('request');
+const Config = require('../config.json');
 
 exports.run = (e, params, discordie) => {
 	if(!params || params.length<1) return e.message.channel.sendMessage(e.message.author.username+", The correct usage is ``]weather <location>``"); 
 	
 	var url = 'http://api.openweathermap.org/data/2.5/weather?q=';
-	var key = '&APPID=25344f47dd3bf2225d2474ac80c139ca';
+	var key = Config.WEATHER_API_KEY;
+	
 	var location = params.join(" ");
 
 	request(url+location+key , (err, res, body) => {
