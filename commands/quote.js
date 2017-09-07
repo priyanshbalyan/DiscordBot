@@ -1,10 +1,11 @@
 var request = require('request');
+const Config = require('../config.json');
 
 exports.run = (e, params, discordie) => {
 	var options = {
 		url: 'https://andruxnet-random-famous-quotes.p.mashape.com/',
 		headers:{
-			"X-Mashape-Authorization":"HmaQCMEY70mshSFJUYoFuPD7fGM6p1YRwqjjsnIZVEiVUI5SzE"
+			"X-Mashape-Authorization":Config.MASHAPE_KEY
 		}
 	};
 	request(options, (err, res, body) => {
