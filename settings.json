@@ -1,11 +1,85 @@
 {
+    "twitter": [
+        {
+            "handle": "CNET",
+            "channel": "326552298354507776"
+        }
+    ],
     "326552181010595844": {
+        "welcomech": null,
+        "starboardch": "326596816198041630",
+        "deletech": null,
+        "selfroles": [
+            "Cambridge Blue",
+            "African Violet",
+            "Green Sheen",
+            "Wild Strawberry",
+            "Persian Green",
+            "Prussian Blue",
+            "Parrot Pink",
+            "Crimson",
+            "Magic Mint",
+            "Metallic Seaweed",
+            "Pearl Aqua",
+            "Red",
+            "Caribbean Green",
+            "Sunset Orange",
+            "Ruby Red",
+            "Hansa Yellow",
+            "Aquamarine",
+            "Princeton Orange",
+            "Malachite",
+            "Despair",
+            "Mustard",
+            "Vivid Cerulean",
+            "Sky Blue",
+            "Jungle Green",
+            "Pastel Violet",
+            "Spring Bud",
+            "Pastel Brown",
+            "Sandy Brown",
+            "Gunmetal",
+            "Peach",
+            "Lapis Lazuli",
+            "Bright Orange",
+            "Apricot",
+            "Candy Red",
+            "Android Green",
+            "Gargoyle Gas",
+            "Wild Orchid",
+            "Lemon Glacier",
+            "Cyan",
+            "Foam Green",
+            "Salmon Pink",
+            "French Plum",
+            "Pineapple",
+            "Kiwi",
+            "Pastel Red",
+            "Cerulean",
+            "Mauve",
+            "Pastel Yellow",
+            "Majorelle Blue",
+            "Smoky Black",
+            "Pale Chestnut",
+            "Fuchsia"
+        ]
+    },
+    "81384788765712384": {
         "welcomech": null,
         "starboardch": null,
         "deletech": null,
-        "leavech": null,
-        "selfroles": [
-            "Candy Red"
-        ]
+        "selfroles": []
+    },
+    "302706847138447360": {
+        "welcomech": "302706847138447360",
+        "starboardch": null,
+        "deletech": null,
+        "selfroles": []
+    },
+    "323989228289654784": {
+        "welcomech": null,
+        "starboardch": null,
+        "deletech": null,
+        "selfroles": []
     }
 }
