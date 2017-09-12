@@ -2,15 +2,16 @@ const request = require('request');
 const Discordie = require('discordie');
 const fs = require('fs');
 
+const Config = require('./config.json');
 const Setter = require("./modules/setter.js");
 
 const Events = Discordie.Events;
 const discordie = new Discordie({ autoReconnect: true });
 
-let prefix = ";";
+let prefix = Config.DEFAULT_PREFIX;
 let settings = JSON.parse(fs.readFileSync('./settings.json'));
 
-const Config = require('./config.json');
+
 discordie.connect({
     token: Config.ALPHA_BOT_TOKEN, //Paste your Bot Application Token here instead of Key.getBotToken()
 });
