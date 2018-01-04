@@ -64,7 +64,7 @@ discordie.Dispatcher.on(Events.MESSAGE_CREATE, e => {
             var cmd = e.message.content.split(' ')[0].split("");
             cmd.shift();
             cmd = cmd.join("");
-
+           // console.log(params);
             try {
                 let commandFile = require('./commands/' + cmd + '.js');
                 commandFile.run(e, params, discordie);
