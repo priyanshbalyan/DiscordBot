@@ -30,13 +30,409 @@
                 "bot": false
             }
         },
-        "saunts": {
-            "value": "Tag not found. Did you mean Cancer?",
+        "star": {
+            "value": "To have bot post a message in <#326596816198041630> add 2 star reactions to it",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "waa": {
+            "value": "https://cdn.discordapp.com/attachments/326552181010595844/329598504601255946/267020ccb33d94b2bf7f6ba4c4ad1380.gif",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "report": {
+            "value": "Report bugs in <#326588967233257472>  channel",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "nsfw": {
+            "value": "Post nsfw content in <#326552361285844992> please",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "welcome": {
+            "value": "**WELCOME NEW PEEPS!!**",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "tags": {
+            "value": "Make your own tags using ]tag create <tagname> <tagcontent>",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "lewd": {
+            "value": "https://images.discordapp.net/attachments/326552181010595844/329607862278160384/Screenshot_2017-06-25-20-53-58-201.jpeg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "discordie": {
+            "value": "http://qeled.github.io/discordie/#/?_k=aiqd7h",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "autistic": {
+            "value": "https://images.discordapp.net/attachments/267799767843602452/331446180284203008/AA6D112BBE6DB1DB82E4C29F69CC83E6984501A1ED4F84D8C4pimgpsh_fullsize_distr.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        },
+        "javascript": {
+            "value": "Faggots use javascript",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        },
+        "denial": {
+            "value": "https://media.thedailytouch.com/2017/05/tumblr_myuxs6Hf1x1qhelj9o1_500.gif",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        },
+        "roles": {
+            "value": "Different Color roles are available on this server. Check out the list in <#328605325894877185>. To add a role type ``]addrole <rolename>`` and @RaiBot will assign it to you",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1f63a028376aa90d541b51e46aba03e5",
+                "bot": false
+            }
+        },
+        "getdomain": {
+            "value": "https://aws.amazon.com/getting-started/tutorials/get-a-domain/#aws-element-modal-d9f78007-6e16-4242-a039-8e76eb69b8a7",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "36cab8aca15d2cce59f91646138edba5",
+                "bot": false
+            }
+        },
+        "lmaoGod": {
+            "value": "fuck u lmaogod",
             "user": {
                 "id": "279207740340043776",
                 "username": "Raiden",
                 "discriminator": "6960",
                 "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "rejoice": {
+            "value": "​https://images.discordapp.net/attachments/326233686456664066/337269465806798848/K7iR2ED.gif",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "cooldown": {
+            "value": " ```js /*     Example by ItsJordan#4297     Adds a cooldown to your commands so the user will have to wait 2.5 seconds between each command.     This code is only meant to be an example and not used without being edited.      REMINDER: <Message> is what you defined in the <Client>.on('message') event. /  let talkedRecently = new Set();  // Checks if they have talked recently if (talkedRecently.has(<Message>.author.id)) {   /     You can change the nature of the cool down by changing the return to something else.     REMINDER: You may need to add an else statement if you do not have any returns in this scope.   */   return; } // Adds the user to the set so that they can't talk for 2.5 seconds talkedRecently.add(<Message>.author.id); setTimeout(() => {   // Removes the user from the set after 2.5 seconds   talkedRecently.delete(<Message>.author.id); }, 2500); ```",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "ree": {
+            "value": "https://images.discordapp.net/attachments/201878358743711744/337844268443893761/REEE.png",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "REE": {
+            "value": "https://images.discordapp.net/attachments/201878358743711744/337844290774499328/REEEE.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "nou": {
+            "value": "http://i1.kym-cdn.com/photos/images/facebook/000/141/513/1d9.png",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "googleitfuck": {
+            "value": "https://cdn.discordapp.com/attachments/81384788765712384/329835352426676236/retro.png",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "serverinvite": {
+            "value": "​https://discord.gg/gTnHDT7",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "nicememe": {
+            "value": "nͫiͤcͫeͤ",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "join": {
+            "value": "https://discord.gg/gTnHDT7",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "edf75debccbb06c24ec7569c2b774eec",
+                "bot": false
+            }
+        },
+        "kys": {
+            "value": "https://i.imgur.com/Qayp66o.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "94f9d951b8f8b3b6b24bfb4c639519a7",
+                "bot": false
+            }
+        },
+        "animetrackers": {
+            "value": "https://animebytes.tv/ https://www.shanaproject.com/ http://www.anirena.com/ http://tracker.minglong.org:8080/ http://animetorrents.me/ http://anidex.moe/ https://animetosho.org/ http://horriblesubs.info/ http://tokyotosho.info/ http://mori.subs.moe/ https://doki.co/ https://mori.subs.moe/fansubber-blogwebsite-directory/ https://www.anirena.com/ https://anisearch.ru/ https://nyaa.si/  Trackers/private sites (there are more out there)",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "8e7cf56650e9573bdb295f7927989544",
+                "bot": false
+            }
+        },
+        "hackerman": {
+            "value": "https://i.ytimg.com/vi/KEkrWRHCDQU/maxresdefault.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "534196ddd83797309f5a80515ca21958",
+                "bot": false
+            }
+        },
+        "kms": {
+            "value": "http://i.imgur.com/O2yNOfE.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "2698bac374dddc965ff12e65120d2888",
+                "bot": false
+            }
+        },
+        "gay": {
+            "value": "https://cdn.discordapp.com/attachments/278588556421758977/360237135263170560/bs.png",
+            "user": {
+                "id": "301970861349535744",
+                "username": "Raiden",
+                "discriminator": "3155",
+                "avatar": "b4ca40ff2b92de3a3f1bda161e7b066d",
+                "bot": false
+            }
+        },
+        "Ree": {
+            "value": "https://cdn.discordapp.com/attachments/114407194971209731/360743048025735170/REEEEEEEEEEEEEEEEEE.gif",
+            "user": {
+                "id": "301970861349535744",
+                "username": "Raiden",
+                "discriminator": "3155",
+                "avatar": "b4ca40ff2b92de3a3f1bda161e7b066d",
+                "bot": false
+            }
+        },
+        "thot": {
+            "value": "https://cdn.discordapp.com/attachments/114407194971209731/365928725059207168/a93.jpg",
+            "user": {
+                "id": "301970861349535744",
+                "username": "Raiden",
+                "discriminator": "3155",
+                "avatar": "973e261592ca824ae09ff672abaffba9",
+                "bot": false
+            }
+        },
+        "fucktard": {
+            "value": "",
+            "user": {
+                "id": "180548006834077696",
+                "username": "Azuyorouアズヨロウ",
+                "discriminator": "7608",
+                "avatar": "d42382582e6f2f4f6654b29e78a90187",
+                "bot": false
+            }
+        },
+        "fuck": {
+            "value": "tard",
+            "user": {
+                "id": "180548006834077696",
+                "username": "Azuyorouアズヨロウ",
+                "discriminator": "7608",
+                "avatar": "d42382582e6f2f4f6654b29e78a90187",
+                "bot": false
+            }
+        },
+        "msx": {
+            "value": "https://www.youtube.com/watch?v=A__MY-8prg0 https://www.youtube.com/watch?v=jtrxV1FKzWA https://www.youtube.com/watch?v=VodZMx7jeOs",
+            "user": {
+                "id": "180548006834077696",
+                "username": "Azuyorouアズヨロウ",
+                "discriminator": "7608",
+                "avatar": "d42382582e6f2f4f6654b29e78a90187",
+                "bot": false
+            }
+        }
+    },
+    "81384788765712384": {
+        "first": {
+            "value": "first discord api tag",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "712179e467140a23b1cc57ece7d014a6",
+                "bot": false
+            }
+        },
+        "Raiden": {
+            "value": "No one wants your bot, Raiden",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        },
+        "raidensbot": {
+            "value": "Completely shit bot absolutely coded in faggot javascript",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        },
+        "denial": {
+            "value": "https://media.thedailytouch.com/2017/05/tumblr_myuxs6Hf1x1qhelj9o1_500.gif",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "1d2eb76cc00b6dbfec0f479db55a4228",
+                "bot": false
+            }
+        }
+    },
+    "302706847138447360": {
+        "joinraidenserver": {
+            "value": "​https://discord.gg/gTnHDT7",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        }
+    },
+    "323989228289654784": {
+        "astolfo": {
+            "value": "http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/ce/ce48a1b50a1144a60df57893d8adffee8530764e_full.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "d13a723e75831ef057b0cf11d279237e",
+                "bot": false
+            }
+        },
+        "kys": {
+            "value": "https://i.imgur.com/Qayp66o.jpg",
+            "user": {
+                "id": "279207740340043776",
+                "username": "Raiden",
+                "discriminator": "6960",
+                "avatar": "94f9d951b8f8b3b6b24bfb4c639519a7",
                 "bot": false
             }
         }
