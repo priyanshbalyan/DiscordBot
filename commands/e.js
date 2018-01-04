@@ -3,7 +3,7 @@ request = require('request');
 let Jimp = require('jimp');
 
 exports.run = (e, params, discordie) => {	
-	if(e.message.author.id !== discordie.User.id) return;  //Not selfbot
+//	if(e.message.author.id !== discordie.User.id) return;  //Not selfbot
 	try{
 		e.message.delete();
 	}catch(err){console.log(err)}
