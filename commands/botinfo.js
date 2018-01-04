@@ -1,5 +1,5 @@
 const moment = require('moment');
-const Config = require('./config.json');
+const Config = require('../config.json');
 
 exports.run = (e, params, discordie) => {
 
@@ -13,7 +13,7 @@ exports.run = (e, params, discordie) => {
 			"text":"Version "+Config.VERSION+" | npm packages: discordie, request, fs, xml2js, easyimage"
 		},
 		"fields":[
-			{ "name": "Developer", "value":"Raiden#6960", "inline":true},
+			{ "name": "Developer", "value":"Raiden#3155", "inline":true},
 			{ "name": "NodeJS Version", "value":process.version, "inline":true},
 			{ "name": "Library", "value":"Discordie", "inline":true},
 			{ "name": "Architecture", "value":process.arch, "inline":true},
